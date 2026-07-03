@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import { site } from '../site.config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : site.name;
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={site.name}
+      href="/rss.xml"
+    />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body style={`--marker: '${site.marker}'`}>
+    <div class="mx-auto max-w-[46rem] px-6 py-10 md:py-14">
+      <header>
+        <a
+          href="/"
+          class="text-ink no-underline hover:no-underline"
+          style="font-size:1.4rem"
+        >
+          <span class="text-accent">{site.prompt}</span>
+          {site.name}
+        </a>
+        <p class="mt-2 text-faint" style="font-size:0.85rem">{site.tagline}</p>
+        <nav
+          class="mt-5 flex flex-wrap gap-x-5 gap-y-1"
+          style="font-size:0.9rem"
+        >
+          {
+            site.nav.map((item) => (
+              <a
+                href={item.href}
+                class={
+                  isActive(item.href)
+                    ? 'text-ink border-b border-accent pb-0.5 hover:no-underline'
+                    : 'text-accent underline-offset-4 hover:underline'
+                }
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      </header>
+
+      <main class="mt-9">
+        <slot />
+      </main>
+
+      <footer
+        class="mt-16 border-t border-rule pt-6 text-faint"
+        style="font-size:0.8rem"
+      >
+        <div class="flex flex-wrap gap-x-4">
+          {
+            site.social.map((s) => (
+              <a href={s.href} class="underline-offset-4 hover:underline">
+                {s.label}
+              </a>
+            ))
+          }
+        </div>
+        <p class="mt-2">built with astro, kept on purpose.</p>
+      </footer>
+    </div>
+  </body>
+</html>

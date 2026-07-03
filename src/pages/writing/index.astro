@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+
+const byYear = new Map<number, CollectionEntry<'writing'>[]>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  const list = byYear.get(year);
+  if (list) list.push(post);
+  else byYear.set(year, [post]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<Base title="writing">
+  <h1 class="text-ink" style="font-size:1.4rem">
+    <span class="text-faint" data-marker></span> writing
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    things i've written down. <a href="/rss.xml">rss →</a>
+  </p>
+  {
+    years.map((year) => (
+      <section class="mt-8">
+        <h2 class="mb-2 text-faint" style="font-size:0.8rem">
+          {year}
+        </h2>
+        <ul class="space-y-2">
+          {byYear.get(year)!.map((post) => (
+            <li class="flex flex-wrap items-baseline gap-x-3">
+              <span class="text-faint tabular-nums" style="font-size:0.8rem">
+                {iso(post.data.date)}
+              </span>
+              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

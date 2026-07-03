@@ -1,0 +1,32 @@
+---
+// A tiny interactive "island" — an Astro component with a vanilla <script>.
+// Demonstrates client interactivity with NO framework. The script only ships
+// because this component is on the page; pages without it stay zero-JS.
+interface Props {
+  start?: number;
+}
+const { start = 0 } = Astro.props;
+---
+
+<div
+  class="my-5 inline-flex items-center gap-4 rounded border border-rule bg-surface px-4 py-2"
+  data-counter
+>
+  <button type="button" data-dec class="text-accent" aria-label="decrement">[ - ]</button>
+  <span data-count class="text-ink tabular-nums">{start}</span>
+  <button type="button" data-inc class="text-accent" aria-label="increment">[ + ]</button>
+</div>
+
+<script>
+  document.querySelectorAll('[data-counter]').forEach((el) => {
+    const out = el.querySelector('[data-count]');
+    if (!out) return;
+    let n = Number(out.textContent ?? '0');
+    el.querySelector('[data-inc]')?.addEventListener('click', () => {
+      out.textContent = String(++n);
+    });
+    el.querySelector('[data-dec]')?.addEventListener('click', () => {
+      out.textContent = String(--n);
+    });
+  });
+</script>

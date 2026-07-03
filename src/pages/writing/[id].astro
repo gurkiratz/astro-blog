@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article>
+    <a href="/writing" class="text-faint hover:underline" style="font-size:0.8rem"
+      >← writing</a
+    >
+    <h1 class="mt-4 text-ink leading-tight" style="font-size:1.5rem">
+      {post.data.title}
+    </h1>
+    <p class="mt-2 text-faint" style="font-size:0.8rem">
+      {iso(post.data.date)}
+      {
+        post.data.tags.length > 0 && (
+          <span> · {post.data.tags.map((t) => `#${t}`).join(' ')}</span>
+        )
+      }
+    </p>
+    <div class="prose mt-8">
+      <Content />
+    </div>
+  </article>
+</Base>

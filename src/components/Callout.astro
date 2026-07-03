@@ -1,0 +1,16 @@
+---
+// A simple note/warning box for use inside .mdx posts. Ships zero JS.
+// Usage:  <Callout type="note">...</Callout>  or  type="warn"
+interface Props {
+  type?: 'note' | 'warn';
+}
+const { type = 'note' } = Astro.props;
+const isWarn = type === 'warn';
+const accent = isWarn ? 'var(--color-tag-amber)' : 'var(--color-accent)';
+const label = isWarn ? 'warning' : 'note';
+---
+
+<aside class="my-5 border-l-2 pl-4" style={`border-color:${accent}`}>
+  <p class="mb-1" style={`font-size:0.8rem;color:${accent}`}>{label}</p>
+  <div class="text-muted"><slot /></div>
+</aside>

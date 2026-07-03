@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+
+const photos = (await getCollection('photos', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const tagColor = ['text-tag-teal', 'text-tag-amber', 'text-tag-pink'];
+---
+
+<Base>
+  <section>
+    <h2 class="mb-3 text-muted" style="font-size:0.9rem">
+      <span class="text-faint" data-marker></span> now
+    </h2>
+    <ul class="space-y-1.5">
+      <li>daily-driving arch + hyprland; dotfiles finally sane</li>
+      <li>building this site by hand — <a href="/now">/now →</a></li>
+    </ul>
+  </section>
+
+  <section class="mt-10">
+    <h2 class="mb-3 text-muted" style="font-size:0.9rem">
+      <span class="text-faint" data-marker></span> recent posts
+    </h2>
+    <ul class="space-y-2">
+      {
+        posts.map((post, i) => (
+          <li class="flex flex-wrap items-baseline gap-x-3">
+            <span class="text-faint tabular-nums" style="font-size:0.8rem">
+              {iso(post.data.date)}
+            </span>
+            <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+            {post.data.tags[0] && (
+              <span class={tagColor[i % 3]} style="font-size:0.8rem">
+                #{post.data.tags[0]}
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-4"><a href="/writing">cat ./posts/* →</a></p>
+  </section>
+
+  {
+    photos.length > 0 && (
+      <section class="mt-10">
+        <h2 class="mb-3 text-muted" style="font-size:0.9rem">
+          <span class="text-faint" data-marker></span> photos
+        </h2>
+        <div class="grid grid-cols-3 gap-2">
+          {photos.map((photo) => (
+            <a href={`/photography/${photo.id}/`} class="block hover:no-underline">
+              <div class="aspect-square overflow-hidden rounded border border-rule">
+                <Image
+                  src={photo.data.image}
+                  alt={photo.data.alt}
+                  widths={[200, 400]}
+                  sizes="150px"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            </a>
+          ))}
+        </div>
+        <p class="mt-3">
+          <a href="/photography">ls ./photos →</a>
+        </p>
+      </section>
+    )
+  }
+</Base>

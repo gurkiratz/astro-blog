@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ── Terminal design tokens ───────────────────────────────────
+   These become Tailwind utilities automatically:
+   --color-accent -> text-accent / bg-accent / border-accent, etc.
+   Change the values here to re-theme the whole site.            */
+@theme {
+  --color-base: #16140f;
+  --color-surface: #1d1a14;
+  --color-ink: #e9e4d7;
+  --color-muted: #8b8576;
+  --color-faint: #6c685c;
+  --color-accent: #ab9cf7;
+  --color-rule: #2a2620;
+  --color-tag-teal: #7fd1b9;
+  --color-tag-amber: #e6a96b;
+  --color-tag-pink: #e58fb0;
+
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas,
+    monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-base);
+    --marker: "##";
+  }
+  body {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-base);
+  }
+}
+
+/* Section marker glyph — driven by --marker (set from site.config.ts via the
+   <body> in Base.astro). Change the glyph in one place. */
+[data-marker]::before {
+  content: var(--marker);
+}
+
+/* ── Long-form prose (post bodies) ─────────────────────────────
+   Mono is great for UI but tiring for paragraphs, so this keeps a
+   comfortable measure and rhythm. Tweak freely.                 */
+.prose {
+  color: var(--color-ink);
+}
+.prose > * + * {
+  margin-top: 1.1em;
+}
+.prose h2,
+.prose h3 {
+  color: #f4efe4;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-top: 1.9em;
+  margin-bottom: 0.5em;
+}
+.prose h2 {
+  font-size: 1.1rem;
+}
+.prose h2::before {
+  content: var(--marker) " ";
+  color: var(--color-faint);
+}
+.prose h3 {
+  font-size: 1rem;
+}
+.prose ul {
+  padding-left: 1.2em;
+  list-style: none;
+}
+.prose li {
+  position: relative;
+}
+.prose li + li {
+  margin-top: 0.3em;
+}
+.prose ul > li::before {
+  content: "·";
+  color: var(--color-accent);
+  position: absolute;
+  left: -1.1em;
+}
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose code {
+  background: var(--color-surface);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--color-tag-teal);
+}
+/* Fenced code blocks are rendered by Expressive Code, which brings its own
+   frame, border, and background styling (configured in astro.config.mjs). */
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 1rem;
+  color: var(--color-muted);
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-rule);
+  margin: 2em 0;
+}

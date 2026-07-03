@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { uses } from '../data/uses';
+---
+
+<Base title="uses">
+  <h1 class="text-ink" style="font-size:1.4rem">
+    <span class="text-faint" data-marker></span> uses
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    the tools i reach for. inspired by <a href="https://uses.tech">uses.tech</a>.
+  </p>
+
+  {
+    uses.map((group) => (
+      <section class="mt-8">
+        <h2 class="mb-2 text-muted" style="font-size:0.9rem">
+          <span class="text-faint" data-marker></span> {group.category}
+        </h2>
+        <ul class="space-y-1.5">
+          {group.items.map((item) => (
+            <li class="flex flex-wrap items-baseline gap-x-3">
+              <span class="text-ink">{item.name}</span>
+              {item.note && (
+                <span class="text-faint" style="font-size:0.85rem">
+                  {item.note}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

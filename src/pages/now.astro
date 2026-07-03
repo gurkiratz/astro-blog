@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Update this date whenever you refresh the page.
+const updated = '2026-06-28';
+---
+
+<Base title="now">
+  <h1 class="text-ink" style="font-size:1.4rem">
+    <span class="text-faint" data-marker></span> now
+  </h1>
+  <p class="mt-2 text-faint" style="font-size:0.8rem">
+    updated {updated} ·{' '}
+    <a href="https://nownownow.com/about">what's a now page?</a>
+  </p>
+  <div class="prose mt-6">
+    <p>What I'm focused on right now:</p>
+    <ul>
+      <li>Daily-driving Arch + Hyprland, finally happy with my dotfiles.</li>
+      <li>Building this website, by hand, on purpose.</li>
+      <li>Reading <em>The Pragmatic Programmer</em> (again).</li>
+    </ul>
+    <!-- TODO: keep this current; that's the whole point of a /now page -->
+  </div>
+</Base>

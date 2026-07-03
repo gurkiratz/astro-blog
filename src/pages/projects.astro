@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { projects } from '../data/projects';
+
+const statusColor = {
+  active: 'text-tag-teal',
+  wip: 'text-tag-amber',
+  archived: 'text-faint',
+} as const;
+---
+
+<Base title="projects">
+  <h1 class="text-ink" style="font-size:1.4rem">
+    <span class="text-faint" data-marker></span> projects
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">things i've built and kept.</p>
+
+  <ul class="mt-8 space-y-7">
+    {
+      projects.map((p) => (
+        <li>
+          <div class="flex flex-wrap items-baseline gap-x-3">
+            <span class="text-ink">{p.name}</span>
+            <span class="text-faint" style="font-size:0.8rem">
+              {p.year}
+            </span>
+            <span class={statusColor[p.status]} style="font-size:0.8rem">
+              {p.status}
+            </span>
+          </div>
+          <p class="mt-1 text-muted" style="font-size:0.9rem">
+            {p.description}
+          </p>
+          {p.links && p.links.length > 0 && (
+            <p class="mt-1" style="font-size:0.85rem">
+              {p.links.map((l, i) => (
+                <>
+                  {i > 0 && <span class="text-faint"> · </span>}
+                  <a href={l.href}>{l.label} →</a>
+                </>
+              ))}
+            </p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</Base>
