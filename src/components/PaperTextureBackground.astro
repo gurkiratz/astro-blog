@@ -1,0 +1,98 @@
+---
+// Same vanilla "script island" approach as HalftoneBackground.astro, using
+// @paper-design/shaders' `paper-texture` effect with flower.png embossed
+// into the paper grain.
+//
+// Uses flower.png rather than flower-2.jpg deliberately: with `fit: cover`
+// the image ends up filling ~the whole frame, so whatever photo is used
+// dominates the output far more than the paper texture does. flower-2.jpg
+// has a strong horizon (sky over a poppy field), and a cover-crop's horizon
+// position shifts with the viewport's aspect ratio — same as any CSS
+// `background-size: cover` photo, but here it reads as a distracting
+// "border" moving around on resize. flower.png is a dense, non-directional
+// macro shot (no horizon/strong edges), so it crops consistently at any
+// aspect ratio.
+interface Props {
+  class?: string;
+}
+const { class: className = 'pointer-events-none fixed inset-0' } = Astro.props;
+---
+
+<div
+  data-paper-texture-bg
+  aria-hidden="true"
+  class={className}
+  transition:persist="site-background"
+>
+</div>
+
+<script>
+  import {
+    ShaderMount,
+    paperTextureFragmentShader,
+    ShaderFitOptions,
+    getShaderColorFromString,
+    getShaderNoiseTexture,
+    isPaperShaderElement,
+  } from '@paper-design/shaders';
+
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('[data-paper-texture-bg]').forEach((el) => {
+      // Already mounted and persisted across a View Transition — nothing to do.
+      if (isPaperShaderElement(el)) return;
+
+      const noise = getShaderNoiseTexture();
+      if (!noise) return;
+      const source = new Image();
+      source.src = '/van.jpg';
+
+      const mount = () => {
+        new ShaderMount(
+          el,
+          paperTextureFragmentShader,
+          {
+            u_image: source,
+            u_noiseTexture: noise,
+            u_colorBack: getShaderColorFromString('#16140f'), // dark theme base, not paper white
+            u_colorFront: getShaderColorFromString('#6c685c'), // theme's muted/faint tone
+            u_contrast: 0.3,
+            u_roughness: 0.4,
+            u_fiber: 0.3,
+            u_fiberSize: 0.2,
+            u_crumples: 0.3,
+            u_crumpleSize: 0.35,
+            // Folds are computed in the shader's own pattern space, which is tied to raw
+            // viewport resolution — the crease lines land at very different relative spots
+            // depending on aspect ratio, so they can't scale smoothly on resize. Disabled.
+            u_folds: 0,
+            u_foldCount: 5,
+            u_drops: 0.2,
+            u_fade: 0,
+            u_seed: 5.8,
+            u_fit: ShaderFitOptions.cover,
+            u_scale: 1, // fills the frame completely — no paper margin to shift on resize
+            u_rotation: 0,
+            u_originX: 0.5,
+            u_originY: 0.5,
+            u_offsetX: 0,
+            u_offsetY: 0,
+            u_worldWidth: 0,
+            u_worldHeight: 0,
+          },
+          undefined,
+          0, // static texture, no time uniform in this shader
+        );
+      };
+
+      Promise.all(
+        [noise, source].map(
+          (img) =>
+            new Promise((resolve) => {
+              if (img.complete) resolve(undefined);
+              else img.onload = () => resolve(undefined);
+            }),
+        ),
+      ).then(mount);
+    });
+  });
+</script>

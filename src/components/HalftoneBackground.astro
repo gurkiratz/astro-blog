@@ -1,0 +1,79 @@
+---
+// A fixed, full-viewport halftone-dot texture behind all page content.
+// Uses @paper-design/shaders directly (no React) — same "vanilla script
+// island" approach as Counter.astro, so pages that don't render this
+// component ship none of this JS.
+interface Props {
+  class?: string;
+}
+const { class: className = 'pointer-events-none fixed inset-0' } = Astro.props;
+---
+
+<div
+  data-halftone-bg
+  aria-hidden="true"
+  class={className}
+  transition:persist="site-background"
+>
+</div>
+
+<script>
+  import {
+    ShaderMount,
+    halftoneDotsFragmentShader,
+    HalftoneDotsGrids,
+    HalftoneDotsTypes,
+    ShaderFitOptions,
+    getShaderColorFromString,
+    isPaperShaderElement,
+  } from '@paper-design/shaders';
+
+  // astro:page-load fires after every navigation, including the very first
+  // one, so this one listener handles both "mount for the first time" and
+  // "re-check after a View Transition" — querySelectorAll (not getElementById)
+  // since Astro only inlines this script once per page even if the component
+  // is used more than once (e.g. the site-wide instance in Base.astro plus a
+  // contained preview instance), so every matching element needs handling.
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('[data-halftone-bg]').forEach((el) => {
+      // Already mounted and persisted across a View Transition — nothing to do.
+      if (isPaperShaderElement(el)) return;
+
+      const source = new Image();
+      source.src = '/flower-2.jpg';
+
+      source.onload = () => {
+        new ShaderMount(
+          el,
+          halftoneDotsFragmentShader,
+          {
+            u_image: source,
+            u_colorBack: getShaderColorFromString('#16140f00'), // fully transparent — page bg shows through
+            u_colorFront: getShaderColorFromString('#ab9cf714'), // accent, very low alpha
+            u_size: 0.18,
+            u_radius: 1,
+            u_contrast: 0.9,
+            u_originalColors: false,
+            u_inverted: false,
+            u_grid: HalftoneDotsGrids.square,
+            u_type: HalftoneDotsTypes.classic,
+            u_grainMixer: 0,
+            u_grainOverlay: 0,
+            u_grainSize: 0.5,
+            u_fit: ShaderFitOptions.cover,
+            u_scale: 1,
+            u_rotation: 0,
+            u_originX: 0.5,
+            u_originY: 0.5,
+            u_offsetX: 0,
+            u_offsetY: 0,
+            u_worldWidth: 0,
+            u_worldHeight: 0,
+          },
+          undefined,
+          0, // static — this shader has no time-based animation anyway
+        );
+      };
+    });
+  });
+</script>

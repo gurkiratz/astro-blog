@@ -1,6 +1,12 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import { site } from '../site.config';
+import { themes, THEME_STORAGE_KEY, themeOpacityFraction } from '../theme.config';
+import ExternalLinkIcon from '../components/ExternalLinkIcon.astro';
+import ThemeBackground from '../components/ThemeBackground.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+
 
 interface Props {
   title?: string;
@@ -32,10 +38,43 @@ const isActive = (href: string) =>
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+    {
+      /* is:inline keeps this a synchronous classic script (Astro's normal
+      script processing emits `type="module"`, which defers execution past
+      first paint — too late to avoid a flash). That also rules out
+      define:vars, which needs Astro's normal processing to inject values,
+      so the theme colors/key are serialized into the script text directly
+      via set:html instead. Applies the saved accent color before first
+      paint, so the header nav doesn't flash the default color and then
+      jump to the stored one once ThemeBackground.astro's module script
+      catches up. */
+    }
+    <script
+      is:inline
+      set:html={`try {
+        var colors = ${JSON.stringify(themes.map((t) => t.color))};
+        var opacities = ${JSON.stringify(themes.map((t) => themeOpacityFraction(t)))};
+        var i = parseInt(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}) || '0', 10);
+        var color = colors[i] || colors[0];
+        var opacity = opacities[i] || opacities[0];
+        if (color) document.documentElement.style.setProperty('--color-accent', color);
+        if (opacity) document.documentElement.style.setProperty('--scrim-opacity', opacity);
+      } catch (e) {}`}
+    />
   </head>
   <body style={`--marker: '${site.marker}'`}>
-    <div class="mx-auto max-w-[46rem] px-6 py-10 md:py-14">
-      <header>
+    <ThemeBackground />
+
+    <div
+      class="pointer-events-none fixed inset-0 bg-base"
+      style={`opacity: var(--scrim-opacity, ${themeOpacityFraction(themes[0])})`}
+      transition:persist="site-background-scrim"
+    >
+    </div>
+    <div class="relative z-10 mx-auto max-w-[46rem] px-6 py-10 md:py-14">
+      <header class="relative">
+        <ThemeSwitcher />
         <a
           href="/"
           class="text-ink no-underline hover:no-underline"
@@ -87,5 +126,25 @@ const isActive = (href: string) =>
         <p class="mt-2">built with astro, kept on purpose.</p>
       </footer>
     </div>
+    <template id="external-link-icon-template">
+      <ExternalLinkIcon />
+    </template>
+    <script is:inline>
+      function enhanceExternalLinks(root) {
+        var template = document.getElementById('external-link-icon-template');
+        if (!template) return;
+
+        (root || document).querySelectorAll('a[href^="http"]').forEach(function (a) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          if (a.querySelector('.external-link-icon')) return;
+          a.appendChild(template.content.cloneNode(true));
+        });
+      }
+      enhanceExternalLinks();
+      document.addEventListener('astro:page-load', function () {
+        enhanceExternalLinks(document);
+      });
+    </script>
   </body>
 </html>

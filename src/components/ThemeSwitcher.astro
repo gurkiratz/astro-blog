@@ -1,0 +1,99 @@
+---
+// "theme" button + dropdown, meant to sit in a `relative`-positioned header.
+// Selecting an option dispatches a "themechange" CustomEvent<number> that
+// ThemeBackground.astro listens for. Not persisted across navigations —
+// it's stateless UI, so a fresh render on every page is fine.
+import { themes, themeLabel } from '../theme.config';
+---
+
+<div class="absolute top-0 right-0" data-theme-switcher>
+  <button
+    type="button"
+    class="text-accent underline-offset-4 hover:underline"
+    style="font-size:0.9rem"
+    data-theme-toggle
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    [theme]
+  </button>
+  <div
+    class="absolute right-0 z-20 mt-2 hidden min-w-36 rounded border border-rule bg-surface py-1"
+    data-theme-menu
+    role="menu"
+  >
+    {
+      themes.map((theme, index) => (
+        <button
+          type="button"
+          class="block w-full px-3 py-1.5 text-left text-ink hover:bg-base hover:text-accent"
+          style="font-size:0.85rem"
+          data-theme-option
+          data-index={index}
+          role="menuitem"
+        >
+          {themeLabel(theme)}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { THEME_STORAGE_KEY } from '../theme.config';
+
+  declare global {
+    interface Window {
+      __themeSwitcherInit?: boolean;
+    }
+  }
+
+  // Delegated from `document` (not the switcher itself) and guarded by a
+  // module-level flag: this script re-runs on every page since the switcher
+  // isn't transition:persist'ed, but a plain document listener would
+  // otherwise stack up one extra (dead, since its closed-over element gets
+  // replaced) listener per navigation.
+  if (!window.__themeSwitcherInit) {
+    window.__themeSwitcherInit = true;
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const menu = document.querySelector<HTMLElement>('[data-theme-menu]');
+      const toggle = document.querySelector<HTMLElement>('[data-theme-toggle]');
+      if (!menu || !toggle) return;
+
+      const optionButton = target.closest<HTMLElement>('[data-theme-option]');
+      if (optionButton) {
+        const index = Number(optionButton.dataset.index);
+        window.dispatchEvent(new CustomEvent('themechange', { detail: index }));
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+        return;
+      }
+
+      if (target.closest('[data-theme-toggle]')) {
+        const willOpen = menu.classList.contains('hidden');
+        menu.classList.toggle('hidden');
+        toggle.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen) {
+          const active = Number(localStorage.getItem(THEME_STORAGE_KEY) ?? 0);
+          menu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((opt) => {
+            opt.classList.toggle('text-accent', Number(opt.dataset.index) === active);
+          });
+        }
+        return;
+      }
+
+      if (!target.closest('[data-theme-switcher]')) {
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelector('[data-theme-menu]')?.classList.add('hidden');
+      document.querySelector('[data-theme-toggle]')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+</script>

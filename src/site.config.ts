@@ -15,39 +15,42 @@ export interface SocialItem {
 
 export const site = {
   /** Shown big at the top + used in the <title> tag. */
-  name: 'Gurkirat Singh',
+  name: "Gurkirat Singh",
 
   /** The little line under your name. */
-  tagline: 'developer · linux · neovim · writing things down',
+  // tagline: 'developer · linux · neovim · writing things down',
+  // tagline: "Master of pushing .DS_Store",
+  tagline: "",
 
   /** The prompt glyph before your name. Try '~', '$', '>', '*'. */
-  prompt: '~',
+  prompt: "",
 
   /** Section heading marker (before "## now" etc). Try '##', '❯', '//', '::'. */
-  marker: '##',
+  marker: "##",
 
   /** Your canonical URL. Keep in sync with `site` in astro.config.mjs. */
-  url: 'https://example.com',
+  url: "https://example.com",
 
   /** Default meta description for pages that don't set their own. */
   description:
-    'Personal site — writing about code, Linux, and small things worth keeping.',
+    "Personal site — writing about code, work life, and small things worth keeping.",
 
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
-    { label: 'home', href: '/' },
-    { label: 'about', href: '/about' },
-    { label: 'now', href: '/now' },
-    { label: 'writing', href: '/writing' },
-    { label: 'photography', href: '/photography' },
-    { label: 'projects', href: '/projects' },
-    { label: 'uses', href: '/uses' },
+    { label: "home", href: "/" },
+    { label: "about", href: "/about" },
+    { label: "now", href: "/now" },
+    { label: "writing", href: "/writing" },
+    { label: "photography", href: "/photography" },
+    { label: "projects", href: "/projects" },
+    { label: "uses", href: "/uses" },
   ] satisfies NavItem[],
 
   /** Footer links. */
   social: [
-    { label: 'rss', href: '/rss.xml' },
-    { label: 'github', href: 'https://github.com/your-handle' },
-    { label: 'email', href: 'mailto:you@example.com' },
+    { label: "rss", href: "/rss.xml" },
+    { label: "github", href: "https://github.com/gurkiratz" },
+    { label: "linkedin", href: "https://www.linkedin.com/in/gurkiratz/" },
+    { label: "email", href: "mailto:gurkirat.singh@humber.ca" },
   ] satisfies SocialItem[],
 };
