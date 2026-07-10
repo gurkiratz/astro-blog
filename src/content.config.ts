@@ -1,6 +1,15 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// An optional string that tolerates a blank frontmatter key. In YAML an empty
+// `description:` line parses as null, which a plain z.string().optional() would
+// reject (typeof null === "object"). We coerce null → undefined so blank keys
+// behave as "absent" and downstream `= default` fallbacks still fire.
+const optionalString = z
+  .string()
+  .nullish()
+  .transform((v) => v ?? undefined);
+
 // The /writing collection. Drop a .md file in src/content/writing/ and it
 // shows up automatically. Frontmatter is type-checked against this schema.
 const writing = defineCollection({
@@ -9,7 +18,7 @@ const writing = defineCollection({
     title: z.string(),
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
-    description: z.string().optional(),
+    description: optionalString,
     draft: z.boolean().default(false),
   }),
 });
@@ -26,8 +35,8 @@ const photos = defineCollection({
       date: z.coerce.date(),
       image: image(),
       alt: z.string(),
-      caption: z.string().optional(),
-      location: z.string().optional(),
+      caption: optionalString,
+      location: optionalString,
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
     }),

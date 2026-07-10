@@ -1,0 +1,195 @@
+{
+  "main": {
+    "id": "65eff7635f3bdb3e",
+    "type": "split",
+    "children": [
+      {
+        "id": "f3d23939849a902a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "08f6a42a6f5cac42",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "94ce1fa67f3eec74",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb9a1a9900968e85",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "506ea66943487edf",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "73a8d1bf276cf956",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "64d98bc5f40de73b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "749a390ba1221d74",
+    "type": "split",
+    "children": [
+      {
+        "id": "de696144c0c318c2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8629ffbadddc7777",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docker-desktop-to-orbstack.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for docker-desktop-to-orbstack"
+            }
+          },
+          {
+            "id": "4af9cd3ad86288c4",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "docker-desktop-to-orbstack.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from docker-desktop-to-orbstack"
+            }
+          },
+          {
+            "id": "9b1c43aa92c9b9fd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "9eb31eaee3c81485",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "a95a94d8a17970b0",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docker-desktop-to-orbstack.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of docker-desktop-to-orbstack"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "506ea66943487edf",
+  "lastOpenFiles": [
+    "docker-desktop-to-orbstack.md",
+    "why-i-still-love-static-sites.md",
+    "Untitled.md",
+    "snippets-i-keep-reaching-for.md",
+    "how-i-made-this-site.md",
+    "gold-medal-skills-ontario-2026.md",
+    "_templates/blog.md",
+    "_templates",
+    "2026-07-04.md"
+  ]
+}

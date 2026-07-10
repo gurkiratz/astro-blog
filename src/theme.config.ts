@@ -38,7 +38,7 @@ export const themes: ThemeEntry[] = [
     image: "/flower.png",
     color: "#fff384",
     component: "halftone-cmyk",
-    opacity: 95,
+    opacity: 97,
   },
   {
     name: "Flowers",
@@ -57,7 +57,7 @@ export const themes: ThemeEntry[] = [
   {
     image: "/purple.jpg",
     color: "#b48ce0",
-    component: "halftone-cmyk",
+    component: "halftone",
     opacity: 85,
   },
   { image: "/sea.jpg", color: "#80B9D1", component: "water", opacity: 90 },

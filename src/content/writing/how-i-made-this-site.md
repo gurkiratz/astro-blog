@@ -1,8 +1,12 @@
 ---
 title: How I made this site
 date: 2026-07-04
-tags: [personal, web, astro]
+tags:
+  - personal
+  - web
+  - astro
 description: The inspirations, the stack, and why I hand-built this instead of using a platform.
+draft: false
 ---
 
 I've been collecting personal sites for years — quietly bookmarking the ones

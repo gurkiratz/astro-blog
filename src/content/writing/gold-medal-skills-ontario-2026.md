@@ -1,8 +1,12 @@
 ---
 title: I won a Gold Medal at Skills Ontario 2026
 date: 2026-05-06
-tags: [personal, achievment, coding]
+tags:
+  - personal
+  - achievment
+  - coding
 description: I competed against 20 colleges and won a Gold Medal in Coding track at Skills Ontario 2026
+draft: true
 ---
 
 ## Links

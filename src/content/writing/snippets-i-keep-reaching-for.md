@@ -1,8 +1,12 @@
 ---
 title: Snippets I keep reaching for
 date: 2026-06-30
-tags: [code, shell, typescript]
+tags:
+  - code
+  - shell
+  - typescript
 description: A few small snippets I copy often — and a demo of how code blocks render on this blog.
+draft: false
 ---
 
 Some code I copy-paste often enough that it lives here now. It doubles as a test
