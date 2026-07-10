@@ -31,8 +31,9 @@ export const site = {
   /** The prompt glyph before your name. Try '~', '$', '>', '*'. */
   prompt: "",
 
-  /** Section heading marker (before "## now" etc). Try '##', '❯', '//', '::'. */
-  marker: "##",
+  /** Section heading marker (before "now" etc). Empty = no marker (quietest).
+      Try '##', '❯', '//', '::' if you want the terminal flavor back. */
+  marker: "",
 
   /** Your canonical URL. Keep in sync with `site` in astro.config.mjs. */
   url: "https://example.com",
@@ -43,20 +44,20 @@ export const site = {
 
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
-    { label: "home", href: "/" },
-    { label: "about", href: "/about" },
-    { label: "now", href: "/now" },
-    { label: "writing", href: "/writing" },
-    { label: "photography", href: "/photography" },
-    { label: "projects", href: "/projects" },
-    { label: "uses", href: "/uses" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Now", href: "/now" },
+    { label: "Writing", href: "/writing" },
+    { label: "Photography", href: "/photography" },
+    { label: "Projects", href: "/projects" },
+    { label: "Uses", href: "/uses" },
   ] satisfies NavItem[],
 
   /** Footer links. */
   social: [
-    { label: "rss", href: "/rss.xml" },
-    { label: "github", href: "https://github.com/gurkiratz" },
-    { label: "linkedin", href: "https://www.linkedin.com/in/gurkiratz/" },
-    { label: "email", href: "mailto:gurkirat.singh@humber.ca" },
+    { label: "RSS", href: "/rss.xml" },
+    { label: "GitHub", href: "https://github.com/gurkiratz" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/gurkiratz/" },
+    { label: "Email", href: "mailto:gurkirat.singh@humber.ca" },
   ] satisfies SocialItem[],
 };

@@ -9,19 +9,44 @@
 // The image is read from --theme-image/--theme-position on <html> (with the
 // first theme as fallback), so the FOUC script can set the right image
 // before this element even exists in the DOM.
+//
+// Themes with a `video` additionally play it in the <video> below, layered
+// over the still image (which doubles as the stand-in while the video
+// buffers). The video only ever has a src while such a theme is active, so
+// other themes don't pay its download.
 import { themes, themePosition } from '../theme.config';
 
 const fallback = themes[0];
+const fallbackImage = fallback.image ? `url('${fallback.image}')` : 'none';
 ---
 
 <div
   data-theme-bg
   aria-hidden="true"
   class="pointer-events-none fixed inset-0 bg-cover bg-no-repeat"
-  style={`background-image: var(--theme-image, url('${fallback.image}')); background-position: var(--theme-position, ${themePosition(fallback)})`}
+  style={`background-image: var(--theme-image, ${fallbackImage}); background-position: var(--theme-position, ${themePosition(fallback)})`}
   transition:persist="site-background"
 >
+  <video
+    data-theme-video
+    class="h-full w-full object-cover"
+    muted
+    loop
+    playsinline
+    autoplay
+    preload="none"
+  ></video>
 </div>
+
+<style>
+  [data-theme-video] {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  [data-theme-video][data-playing] {
+    opacity: 1;
+  }
+</style>
 
 <script>
   import {
@@ -30,6 +55,7 @@ const fallback = themes[0];
     getStoredThemeIndex,
     themeOpacityFraction,
     themePosition,
+    PALETTE_KEYS,
     type ThemeEntry,
   } from '../theme.config';
 
@@ -37,9 +63,70 @@ const fallback = themes[0];
     const root = document.documentElement.style;
     root.setProperty('--color-accent', theme.color);
     root.setProperty('--scrim-opacity', String(themeOpacityFraction(theme)));
-    root.setProperty('--theme-image', `url('${theme.image}')`);
+    root.setProperty(
+      '--theme-image',
+      theme.image ? `url('${theme.image}')` : 'none',
+    );
     root.setProperty('--theme-position', themePosition(theme));
+    // Native UI (form controls, scrollbars) follows the theme's scheme, and
+    // the data-theme attribute switches Expressive Code's dark/light styles
+    // (see themeCssSelector in astro.config.mjs).
+    root.setProperty('color-scheme', theme.scheme ?? 'dark');
+    document.documentElement.setAttribute(
+      'data-theme',
+      theme.scheme ?? 'dark',
+    );
+    // Reset any palette overrides from the previous theme, then apply this
+    // theme's (if any) — image-less themes recolor the whole site this way.
+    for (const key of PALETTE_KEYS) {
+      const override = theme.palette?.[key];
+      if (override) root.setProperty(`--color-${key}`, override);
+      else root.removeProperty(`--color-${key}`);
+    }
+    applyThemeVideo(theme);
   }
+
+  function applyThemeVideo(theme: ThemeEntry) {
+    const video = document.querySelector<HTMLVideoElement>(
+      '[data-theme-video]',
+    );
+    if (!video) return;
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    if (!theme.video || reduceMotion) {
+      video.removeAttribute('data-playing');
+      // Drop the src entirely so a hidden video doesn't keep buffering.
+      if (video.getAttribute('src')) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
+      return;
+    }
+
+    // Idempotent on repeated page loads (View Transitions re-run this):
+    // only touch the element when the theme's video actually changed,
+    // otherwise the loop would visibly restart on every navigation.
+    if (video.getAttribute('src') !== theme.video) {
+      video.removeAttribute('data-playing');
+      video.src = theme.video;
+      video.load();
+    }
+    video.play().catch(() => {
+      // Autoplay was blocked — the still image stays, which is fine.
+    });
+  }
+
+  // Fade the video in only once frames are actually rendering, so the
+  // still image never cuts to a black rectangle while buffering.
+  document
+    .querySelector<HTMLVideoElement>('[data-theme-video]')
+    ?.addEventListener('playing', (e) => {
+      (e.currentTarget as HTMLVideoElement).setAttribute('data-playing', '');
+    });
 
   // Re-applied on every page load, not just the first: Astro's View
   // Transitions re-render <html> from each freshly-fetched page (which has

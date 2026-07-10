@@ -12,22 +12,25 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const iso = (d: Date) => d.toISOString().slice(0, 10);
+const longDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
 
 <Base title={post.data.title} description={post.data.description}>
   <article>
-    <a href="/writing" class="text-faint hover:underline" style="font-size:0.8rem"
-      >← writing</a
+    <a
+      href="/writing"
+      class="text-faint no-underline hover:text-ink"
+      style="font-size:0.9rem">← Writing</a
     >
-    <h1 class="mt-4 text-ink leading-tight" style="font-size:1.5rem">
+    <h1 class="mt-4 text-ink font-medium leading-tight" style="font-size:1.35rem">
       {post.data.title}
     </h1>
-    <p class="mt-2 text-faint" style="font-size:0.8rem">
-      {iso(post.data.date)}
+    <p class="mt-2 text-faint" style="font-size:0.9rem">
+      {longDate(post.data.date)}
       {
         post.data.tags.length > 0 && (
-          <span> · {post.data.tags.map((t) => `#${t}`).join(' ')}</span>
+          <span> · {post.data.tags.join(', ')}</span>
         )
       }
     </p>

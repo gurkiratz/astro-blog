@@ -1,32 +1,34 @@
 ---
-// "theme" button + dropdown, meant to sit in a `relative`-positioned header.
+// Theme button + dropdown, meant to sit in a `relative`-positioned header.
 // Selecting an option dispatches a "themechange" CustomEvent<number> that
 // ThemeBackground.astro listens for. Not persisted across navigations —
 // it's stateless UI, so a fresh render on every page is fine.
+import { Palette } from '@lucide/astro';
 import { themes, themeLabel } from '../theme.config';
 ---
 
 <div class="absolute top-0 right-0" data-theme-switcher>
   <button
     type="button"
-    class="text-accent underline-offset-4 hover:underline"
-    style="font-size:0.9rem"
+    class="theme-toggle text-muted transition-colors duration-200 hover:text-accent"
     data-theme-toggle
+    aria-label="Theme"
     aria-haspopup="true"
     aria-expanded="false"
   >
-    [theme]
+    <Palette class="theme-toggle-icon" size={18} aria-hidden="true" />
   </button>
   <div
-    class="absolute right-0 z-20 mt-2 hidden min-w-36 rounded border border-rule bg-surface py-1"
+    class="theme-menu absolute right-0 z-20 mt-2 min-w-36 rounded border border-rule bg-surface py-1"
     data-theme-menu
     role="menu"
+    hidden
   >
     {
       themes.map((theme, index) => (
         <button
           type="button"
-          class="block w-full px-3 py-1.5 text-left text-ink hover:bg-base hover:text-accent"
+          class="block w-full px-3 py-1.5 text-left text-ink transition-colors duration-150 hover:bg-base hover:text-accent"
           style="font-size:0.85rem"
           data-theme-option
           data-index={index}
@@ -39,6 +41,33 @@ import { themes, themeLabel } from '../theme.config';
   </div>
 </div>
 
+<style>
+  .theme-toggle-icon {
+    transition: transform 200ms ease;
+  }
+
+  .theme-toggle:hover .theme-toggle-icon,
+  .theme-toggle[aria-expanded='true'] .theme-toggle-icon {
+    transform: rotate(-12deg) scale(1.08);
+  }
+
+  .theme-menu {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+    transform-origin: top right;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+    pointer-events: none;
+  }
+
+  .theme-menu[data-open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+</style>
+
 <script>
   import { THEME_STORAGE_KEY } from '../theme.config';
 
@@ -46,6 +75,26 @@ import { themes, themeLabel } from '../theme.config';
     interface Window {
       __themeSwitcherInit?: boolean;
     }
+  }
+
+  function setMenuOpen(menu: HTMLElement, toggle: HTMLElement, open: boolean) {
+    toggle.setAttribute('aria-expanded', String(open));
+    const prev = (menu as HTMLElement & { __closeTimer?: number }).__closeTimer;
+    if (prev) window.clearTimeout(prev);
+
+    if (open) {
+      menu.hidden = false;
+      // Next frame so the transition runs from the closed styles.
+      requestAnimationFrame(() => menu.setAttribute('data-open', ''));
+      return;
+    }
+
+    if (!menu.hasAttribute('data-open') && menu.hidden) return;
+
+    menu.removeAttribute('data-open');
+    (menu as HTMLElement & { __closeTimer?: number }).__closeTimer = window.setTimeout(() => {
+      menu.hidden = true;
+    }, 180);
   }
 
   // Delegated from `document` (not the switcher itself) and guarded by a
@@ -66,34 +115,32 @@ import { themes, themeLabel } from '../theme.config';
       if (optionButton) {
         const index = Number(optionButton.dataset.index);
         window.dispatchEvent(new CustomEvent('themechange', { detail: index }));
-        menu.classList.add('hidden');
-        toggle.setAttribute('aria-expanded', 'false');
+        setMenuOpen(menu, toggle, false);
         return;
       }
 
       if (target.closest('[data-theme-toggle]')) {
-        const willOpen = menu.classList.contains('hidden');
-        menu.classList.toggle('hidden');
-        toggle.setAttribute('aria-expanded', String(willOpen));
+        const willOpen = !menu.hasAttribute('data-open');
         if (willOpen) {
           const active = Number(localStorage.getItem(THEME_STORAGE_KEY) ?? 0);
           menu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((opt) => {
             opt.classList.toggle('text-accent', Number(opt.dataset.index) === active);
           });
         }
+        setMenuOpen(menu, toggle, willOpen);
         return;
       }
 
       if (!target.closest('[data-theme-switcher]')) {
-        menu.classList.add('hidden');
-        toggle.setAttribute('aria-expanded', 'false');
+        setMenuOpen(menu, toggle, false);
       }
     });
 
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
-      document.querySelector('[data-theme-menu]')?.classList.add('hidden');
-      document.querySelector('[data-theme-toggle]')?.setAttribute('aria-expanded', 'false');
+      const menu = document.querySelector<HTMLElement>('[data-theme-menu]');
+      const toggle = document.querySelector<HTMLElement>('[data-theme-toggle]');
+      if (menu && toggle) setMenuOpen(menu, toggle, false);
     });
   }
 </script>
