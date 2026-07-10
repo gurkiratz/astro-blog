@@ -22,6 +22,12 @@ export const site = {
   // tagline: "Master of pushing .DS_Store",
   tagline: "",
 
+  /** Shown in the footer clock: "3:00pm in Toronto, Canada". */
+  location: "Toronto, Canada",
+
+  /** IANA timezone for the live footer clock. */
+  timezone: "America/Toronto",
+
   /** The prompt glyph before your name. Try '~', '$', '>', '*'. */
   prompt: "",
 

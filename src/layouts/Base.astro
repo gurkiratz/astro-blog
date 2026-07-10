@@ -1,8 +1,9 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import { getCollection } from 'astro:content';
 import '../styles/global.css';
 import { site } from '../site.config';
-import { themes, THEME_STORAGE_KEY, themeOpacityFraction } from '../theme.config';
+import { themes, THEME_STORAGE_KEY, themeOpacityFraction, themePosition } from '../theme.config';
 import ExternalLinkIcon from '../components/ExternalLinkIcon.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
@@ -18,6 +19,21 @@ const pageTitle = title ? `${title} — ${site.name}` : site.name;
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
+
+const [posts, photos] = await Promise.all([
+  getCollection('writing', ({ data }) => !data.draft),
+  getCollection('photos', ({ data }) => !data.draft),
+]);
+const latestDate = [...posts, ...photos]
+  .map((entry) => entry.data.date)
+  .sort((a, b) => b.valueOf() - a.valueOf())[0];
+const updatedLabel = latestDate
+  ? latestDate.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
 ---
 
 <!doctype html>
@@ -45,21 +61,28 @@ const isActive = (href: string) =>
       first paint — too late to avoid a flash). That also rules out
       define:vars, which needs Astro's normal processing to inject values,
       so the theme colors/key are serialized into the script text directly
-      via set:html instead. Applies the saved accent color before first
-      paint, so the header nav doesn't flash the default color and then
-      jump to the stored one once ThemeBackground.astro's module script
-      catches up. */
+      via set:html instead. Applies the saved accent color and background
+      image before first paint, so the header nav doesn't flash the default
+      color and then jump to the stored one once ThemeBackground.astro's
+      module script catches up. */
     }
     <script
       is:inline
       set:html={`try {
         var colors = ${JSON.stringify(themes.map((t) => t.color))};
         var opacities = ${JSON.stringify(themes.map((t) => themeOpacityFraction(t)))};
+        var images = ${JSON.stringify(themes.map((t) => t.image))};
+        var positions = ${JSON.stringify(themes.map((t) => themePosition(t)))};
         var i = parseInt(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}) || '0', 10);
+        var root = document.documentElement.style;
         var color = colors[i] || colors[0];
         var opacity = opacities[i] || opacities[0];
-        if (color) document.documentElement.style.setProperty('--color-accent', color);
-        if (opacity) document.documentElement.style.setProperty('--scrim-opacity', opacity);
+        var image = images[i] || images[0];
+        var position = positions[i] || positions[0];
+        if (color) root.setProperty('--color-accent', color);
+        if (opacity) root.setProperty('--scrim-opacity', opacity);
+        if (image) root.setProperty('--theme-image', "url('" + image + "')");
+        if (position) root.setProperty('--theme-position', position);
       } catch (e) {}`}
     />
   </head>
@@ -83,7 +106,17 @@ const isActive = (href: string) =>
           <span class="text-accent">{site.prompt}</span>
           {site.name}
         </a>
-        <p class="mt-2 text-faint" style="font-size:0.85rem">{site.tagline}</p>
+        {
+          updatedLabel ? (
+            <p class="mt-2 text-faint" style="font-size:0.85rem">
+              Updated {updatedLabel}
+            </p>
+          ) : site.tagline ? (
+            <p class="mt-2 text-faint" style="font-size:0.85rem">
+              {site.tagline}
+            </p>
+          ) : null
+        }
         <nav
           class="mt-5 flex flex-wrap gap-x-5 gap-y-1"
           style="font-size:0.9rem"
@@ -114,6 +147,15 @@ const isActive = (href: string) =>
         class="mt-16 border-t border-rule pt-6 text-faint"
         style="font-size:0.8rem"
       >
+        <p
+          class="mb-3"
+          data-local-time
+          data-timezone={site.timezone}
+          data-location={site.location}
+        >
+          <span class="text-ink" data-local-time-value>—</span>
+          <span> in {site.location}</span>
+        </p>
         <div class="flex flex-wrap gap-x-4">
           {
             site.social.map((s) => (
@@ -123,7 +165,6 @@ const isActive = (href: string) =>
             ))
           }
         </div>
-        <p class="mt-2">built with astro, 2026</p>
       </footer>
     </div>
     <template id="external-link-icon-template">
@@ -141,9 +182,45 @@ const isActive = (href: string) =>
           a.appendChild(template.content.cloneNode(true));
         });
       }
+
+      function formatLocalTime(date, timeZone) {
+        var parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: timeZone,
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }).formatToParts(date);
+        var hour = '';
+        var minute = '';
+        var dayPeriod = '';
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].type === 'hour') hour = parts[i].value;
+          if (parts[i].type === 'minute') minute = parts[i].value;
+          if (parts[i].type === 'dayPeriod') dayPeriod = parts[i].value.toLowerCase();
+        }
+        return hour + ':' + minute + dayPeriod;
+      }
+
+      var localTimeTimer = null;
+      function startLocalTime() {
+        var el = document.querySelector('[data-local-time]');
+        if (!el) return;
+        var value = el.querySelector('[data-local-time-value]');
+        if (!value) return;
+        var timeZone = el.getAttribute('data-timezone') || 'America/Toronto';
+        function tick() {
+          value.textContent = formatLocalTime(new Date(), timeZone);
+        }
+        tick();
+        if (localTimeTimer) clearInterval(localTimeTimer);
+        localTimeTimer = setInterval(tick, 30000);
+      }
+
       enhanceExternalLinks();
+      startLocalTime();
       document.addEventListener('astro:page-load', function () {
         enhanceExternalLinks(document);
+        startLocalTime();
       });
     </script>
   </body>

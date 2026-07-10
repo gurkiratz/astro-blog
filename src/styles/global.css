@@ -20,24 +20,6 @@
     monospace;
 }
 
-/* @paper-design/shaders injects its own canvas-sizing <style> tag into
-   <head> at runtime the first time a shader mounts. Astro's View Transitions
-   diffs <head> between pages and drops that tag on navigation, since it
-   isn't part of the statically-rendered document — which left the shader
-   canvas sized to its raw width/height attributes (the full device-pixel
-   backing resolution) instead of 100% of its container, showing up as the
-   background rendering "zoomed in" after a client-side navigation.
-   Duplicating the rule here, in a stylesheet Astro always keeps across
-   transitions, keeps it in place regardless of which background is active. */
-[data-paper-shader] canvas {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
 @layer base {
   html {
     color-scheme: dark;

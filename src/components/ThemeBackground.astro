@@ -1,52 +1,53 @@
 ---
 // Single persisted background layer, driven by whichever theme (image +
-// accent color + shader component) is selected via ThemeSwitcher.astro,
-// which dispatches a "themechange" CustomEvent<number> (the theme's index
-// in theme.config.ts) that this script listens for. The choice is saved to
-// localStorage so it survives reloads, and the initial pick is applied
-// before paint by an inline script in Base.astro's <head> (see there for why).
+// accent color) is selected via ThemeSwitcher.astro, which dispatches a
+// "themechange" CustomEvent<number> (the theme's index in theme.config.ts)
+// that this script listens for. The choice is saved to localStorage so it
+// survives reloads, and the initial pick is applied before paint by an
+// inline script in Base.astro's <head> (see there for why).
+//
+// The image is read from --theme-image/--theme-position on <html> (with the
+// first theme as fallback), so the FOUC script can set the right image
+// before this element even exists in the DOM.
+import { themes, themePosition } from '../theme.config';
+
+const fallback = themes[0];
 ---
 
 <div
   data-theme-bg
   aria-hidden="true"
-  class="pointer-events-none fixed inset-0"
+  class="pointer-events-none fixed inset-0 bg-cover bg-no-repeat"
+  style={`background-image: var(--theme-image, url('${fallback.image}')); background-position: var(--theme-position, ${themePosition(fallback)})`}
   transition:persist="site-background"
 >
 </div>
 
 <script>
-  import { isPaperShaderElement } from '@paper-design/shaders';
-  import { mountThemeBackground } from '../lib/shaderBackgrounds';
   import {
     themes,
     THEME_STORAGE_KEY,
     getStoredThemeIndex,
     themeOpacityFraction,
+    themePosition,
     type ThemeEntry,
   } from '../theme.config';
 
   function applyThemeStyle(theme: ThemeEntry) {
-    document.documentElement.style.setProperty('--color-accent', theme.color);
-    document.documentElement.style.setProperty('--scrim-opacity', String(themeOpacityFraction(theme)));
+    const root = document.documentElement.style;
+    root.setProperty('--color-accent', theme.color);
+    root.setProperty('--scrim-opacity', String(themeOpacityFraction(theme)));
+    root.setProperty('--theme-image', `url('${theme.image}')`);
+    root.setProperty('--theme-position', themePosition(theme));
   }
 
+  // Re-applied on every page load, not just the first: Astro's View
+  // Transitions re-render <html> from each freshly-fetched page (which has
+  // no inline style — that's only ever added by this script and the FOUC
+  // script in Base.astro's <head>), which wipes the CSS variable overrides
+  // set on the previous page.
   document.addEventListener('astro:page-load', () => {
-    // Re-applied on every page load, not just the first: Astro's View
-    // Transitions re-render <html> from each freshly-fetched page (which has
-    // no inline style — that's only ever added by this script), which wipes
-    // the --color-accent/--scrim-opacity overrides set on the previous page.
-    // The shader itself doesn't need remounting once persisted, but these
-    // styles do need reasserting every time, so this must run unconditionally
-    // rather than being skipped alongside the mount when already mounted.
-    const theme = themes[getStoredThemeIndex()];
-    applyThemeStyle(theme);
-
-    document.querySelectorAll<HTMLElement>('[data-theme-bg]').forEach((el) => {
-      // Already mounted and persisted across a View Transition — nothing to do.
-      if (isPaperShaderElement(el)) return;
-      mountThemeBackground(el, theme.component, theme.image);
-    });
+    applyThemeStyle(themes[getStoredThemeIndex()]);
   });
 
   window.addEventListener('themechange', (event) => {
@@ -56,10 +57,5 @@
 
     localStorage.setItem(THEME_STORAGE_KEY, String(index));
     applyThemeStyle(theme);
-
-    document.querySelectorAll<HTMLElement>('[data-theme-bg]').forEach((el) => {
-      if (isPaperShaderElement(el)) el.paperShaderMount?.dispose();
-      mountThemeBackground(el, theme.component, theme.image);
-    });
   });
 </script>
