@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import expressiveCode from "astro-expressive-code";
 
+import cloudflare from "@astrojs/cloudflare";
+
 // Set this to your real domain. It's used for canonical URLs and the RSS feed.
 export default defineConfig({
   site: "https://gurkiratz.co",
@@ -49,4 +51,6 @@ export default defineConfig({
     }),
     mdx(),
   ],
+
+  adapter: cloudflare(),
 });

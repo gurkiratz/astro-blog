@@ -20,3 +20,7 @@ pnpm-debug.log*
 # Obsidian local editor state (keep plugins/settings tracked)
 **/.obsidian/workspace.json
 **/.obsidian/app.json
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
