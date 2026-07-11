@@ -53,7 +53,7 @@ export const site = {
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
     { label: "Home", href: "/" },
-    // { label: "About", href: "/about" },
+    { label: "About", href: "/about" },
     { label: "Projects", href: "/projects" },
     { label: "Writing", href: "/writing" },
     // { label: "Now", href: "/now" },
