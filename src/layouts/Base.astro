@@ -14,7 +14,6 @@ import FooterDoodle from '../components/FooterDoodle.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 
-
 interface Props {
   title?: string;
   description?: string;
@@ -227,6 +226,11 @@ const updatedLabel = latestDate
         enhanceExternalLinks(document);
         startLocalTime();
       });
+    </script>
+    <script>
+      import { bind } from 'cuelume';
+
+      bind();
     </script>
   </body>
 </html>

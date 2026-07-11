@@ -93,6 +93,7 @@ export const themes: ThemeEntry[] = [
       muted: "#9a9a9a",
       faint: "#6e6e6e",
       rule: "#262626",
+      selection: "#F7CF7B",
     },
   },
   {
