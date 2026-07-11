@@ -13,6 +13,14 @@ export interface SocialItem {
   href: string;
 }
 
+/** Shared profile / feed URLs — referenced by `site` and the footer social list. */
+export const links = {
+  github: "https://github.com/gurkiratz",
+  linkedin: "https://www.linkedin.com/in/gurkiratz/",
+  email: "mailto:gurkirat.singh@humber.ca",
+  rss: "/rss.xml",
+} as const;
+
 export const site = {
   /** Shown big at the top + used in the <title> tag. */
   name: "Gurkirat Singh",
@@ -36,7 +44,7 @@ export const site = {
   marker: "",
 
   /** Your canonical URL. Keep in sync with `site` in astro.config.mjs. */
-  url: "https://example.com",
+  url: "https://gurkiratz.co",
 
   /** Default meta description for pages that don't set their own. */
   description:
@@ -45,19 +53,23 @@ export const site = {
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Now", href: "/now" },
-    { label: "Writing", href: "/writing" },
-    { label: "Photography", href: "/photography" },
+    // { label: "About", href: "/about" },
     { label: "Projects", href: "/projects" },
-    { label: "Uses", href: "/uses" },
+    { label: "Writing", href: "/writing" },
+    // { label: "Now", href: "/now" },
+    // { label: "Photography", href: "/photography" },
+    // { label: "Uses", href: "/uses" },
+    { label: "Slashpages", href: "/slashpages" },
   ] satisfies NavItem[],
+
+  // Social media links
+  ...links,
 
   /** Footer links. */
   social: [
-    { label: "RSS", href: "/rss.xml" },
-    { label: "GitHub", href: "https://github.com/gurkiratz" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/gurkiratz/" },
-    { label: "Email", href: "mailto:gurkirat.singh@humber.ca" },
+    { label: "RSS", href: links.rss },
+    { label: "GitHub", href: links.github },
+    { label: "LinkedIn", href: links.linkedin },
+    { label: "Email", href: links.email },
   ] satisfies SocialItem[],
 };

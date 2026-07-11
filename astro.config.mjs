@@ -6,7 +6,7 @@ import expressiveCode from "astro-expressive-code";
 
 // Set this to your real domain. It's used for canonical URLs and the RSS feed.
 export default defineConfig({
-  site: "https://example.com",
+  site: "https://gurkiratz.co",
 
   vite: {
     plugins: [tailwindcss()],

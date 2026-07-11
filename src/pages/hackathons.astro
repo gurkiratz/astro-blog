@@ -1,33 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
-import { projects, labelTone } from '../data/projects';
+import { hackathons, labelTone } from '../data/hackathons';
 ---
 
-<Base title="Projects">
+<Base title="Hackathons">
   <h1 class="text-ink font-medium" style="font-size:1.1rem">
-    <span class="text-faint" data-marker></span> Projects
+    <span class="text-faint" data-marker></span> Hackathons
   </h1>
-  <p class="mt-2 text-muted" style="font-size:0.9rem">Things I've built and kept. See my <a href="/hackathons">Hackathon Projects</a>.</p>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    Competitions and weekend builds I've shown up for.
+  </p>
 
   <ul class="mt-8 space-y-7">
     {
-      projects.map((p) => (
+      hackathons.map((h) => (
         <li>
           <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span class="text-ink">{p.name}</span>
+            <span class="text-ink">{h.event}</span>
             <span class="text-faint" style="font-size:0.8rem">
-              {p.year}
+              {h.year}
             </span>
-            {p.labels?.map((label) => (
+            {h.labels?.map((label) => (
               <span class={`pill pill-${labelTone(label)}`}>{label}</span>
             ))}
           </div>
           <p class="mt-1 text-muted" style="font-size:0.9rem">
-            {p.description}
+            <span class="text-ink">{h.name}</span>
+            {' — '}
+            {h.description}
           </p>
-          {p.links && p.links.length > 0 && (
+          {h.links && h.links.length > 0 && (
             <p class="mt-1" style="font-size:0.85rem">
-              {p.links.map((l, i) => (
+              {h.links.map((l, i) => (
                 <>
                   {i > 0 && <span class="text-faint"> · </span>}
                   <a href={l.href}>{l.label}</a>

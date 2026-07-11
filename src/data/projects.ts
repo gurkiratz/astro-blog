@@ -3,35 +3,66 @@
 export interface Project {
   name: string;
   year: string;
-  status: 'active' | 'wip' | 'archived';
+  /**
+   * Pill badges shown next to the name, e.g. ["Building"], ["New"], or any
+   * custom string. Known labels get a fixed color from LABEL_TONES below;
+   * anything else renders as a quiet neutral pill.
+   */
+  labels?: string[];
   description: string;
   links?: { label: string; href: string }[];
 }
 
+/** Pill color tones — styled per light/dark scheme in global.css. */
+export type LabelTone = "blue" | "green" | "orange" | "pink" | "neutral";
+
+/**
+ * One place that decides what color a label is, so "Building" looks the
+ * same everywhere. Add custom labels here when they deserve a color;
+ * unknown labels fall back to neutral.
+ */
+export const LABEL_TONES: Record<string, LabelTone> = {
+  Building: "blue",
+  New: "orange",
+  Archived: "neutral",
+};
+
+export function labelTone(label: string): LabelTone {
+  return LABEL_TONES[label] ?? "neutral";
+}
+
 export const projects: Project[] = [
   {
-    name: 'this site',
-    year: '2026',
-    status: 'active',
-    description: 'A hand-built personal site + blog. Astro, Tailwind, no templates.',
-    links: [{ label: 'repo', href: 'https://github.com/your-handle/site' }],
-  },
-  {
-    name: 'dotfiles',
-    year: '2025',
-    status: 'active',
-    description: 'My Arch + Hyprland + Neovim setup, kept reproducible.',
-    links: [{ label: 'repo', href: 'https://github.com/your-handle/dotfiles' }],
-  },
-  {
-    name: 'example project',
-    year: '2024',
-    status: 'archived',
+    name: "Kirtan Sewa Player",
+    year: "2026",
+    labels: ["New"],
     description:
-      'A placeholder — replace these with your real work in src/data/projects.ts.',
+      "A web app for playing kirtan sewa audio files fromkirtansewa.net.",
+    links: [{ label: "live", href: "https://kirtansewa-player.vercel.app/" }],
+  },
+  {
+    name: "this site",
+    year: "2026",
+    labels: ["Building"],
+    description:
+      "A hand-built personal site + blog. Astro, Tailwind, no templates.",
+    links: [{ label: "repo", href: "https://github.com/your-handle/site" }],
+  },
+  {
+    name: "dotfiles",
+    year: "2025",
+    description: "My Arch + Hyprland + Neovim setup, kept reproducible.",
+    links: [{ label: "repo", href: "https://github.com/your-handle/dotfiles" }],
+  },
+  {
+    name: "example project",
+    year: "2024",
+    labels: ["Archived"],
+    description:
+      "A placeholder — replace these with your real work in src/data/projects.ts.",
     links: [
-      { label: 'repo', href: '#' },
-      { label: 'live', href: '#' },
+      { label: "repo", href: "#" },
+      { label: "live", href: "#" },
     ],
   },
 ];

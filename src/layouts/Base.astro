@@ -10,6 +10,7 @@ import {
   themePosition,
 } from '../theme.config';
 import ExternalLinkIcon from '../components/ExternalLinkIcon.astro';
+import FooterDoodle from '../components/FooterDoodle.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 
@@ -114,11 +115,7 @@ const updatedLabel = latestDate
           {site.name}
         </a>
         {
-          updatedLabel ? (
-            <p class="mt-0.5 text-faint" style="font-size:0.9rem">
-              Updated {updatedLabel}
-            </p>
-          ) : site.tagline ? (
+          site.tagline ? (
             <p class="mt-0.5 text-faint" style="font-size:0.9rem">
               {site.tagline}
             </p>
@@ -148,14 +145,22 @@ const updatedLabel = latestDate
         transition:persist="site-footer"
       >
         <p
-          class="mb-3"
+          class="mb-3 flex flex-wrap items-center gap-3"
           data-local-time
           data-timezone={site.timezone}
           data-location={site.location}
         >
-          <span class="text-ink" data-local-time-value>—</span>
-          <span> in {site.location}</span>
+          <span>
+            <span class="text-ink" data-local-time-value>—</span>
+            <span> in {site.location}</span>
+          </span>
+          <FooterDoodle />
         </p>
+        {
+          updatedLabel ? (
+            <p class="mb-3">Updated {updatedLabel}</p>
+          ) : null
+        }
         <div class="flex flex-wrap gap-x-4">
           {
             site.social.map((s) => (

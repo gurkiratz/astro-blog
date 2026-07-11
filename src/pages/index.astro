@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { site } from '../site.config';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -13,9 +14,9 @@ const shortDate = (d: Date) =>
 <Base>
   <section>
 
-    <ul class="space-y-1.5">
-      <li>daily-driving arch + hyprland; dotfiles finally sane</li>
-      <li>building this site by hand — <a href="/now">/now →</a></li>
+    <ul class="space-y-4">
+      <li>I'm a software and design engineer based in Toronto, CA. I build small things that feel good to use the kind where you only notice the details when they're missing.</li>
+      <li>Say hi on <a href={site.github}>GitHub</a>, <a href={site.linkedin}>LinkedIn</a>, or <a href={site.email}>Email</a> if you want to talk.</li>
     </ul>
   </section>
 

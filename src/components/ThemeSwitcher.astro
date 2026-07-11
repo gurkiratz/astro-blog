@@ -3,7 +3,7 @@
 // Selecting an option dispatches a "themechange" CustomEvent<number> that
 // ThemeBackground.astro listens for. Not persisted across navigations —
 // it's stateless UI, so a fresh render on every page is fine.
-import { Palette } from '@lucide/astro';
+import { Sparkles } from '@lucide/astro';
 import { themes, themeLabel } from '../theme.config';
 ---
 
@@ -16,7 +16,7 @@ import { themes, themeLabel } from '../theme.config';
     aria-haspopup="true"
     aria-expanded="false"
   >
-    <Palette class="theme-toggle-icon" size={18} aria-hidden="true" />
+    <Sparkles class="theme-toggle-icon" size={18} aria-hidden="true" />
   </button>
   <div
     class="theme-menu absolute right-0 z-20 mt-2 min-w-36 rounded border border-rule bg-surface py-1"
@@ -28,11 +28,12 @@ import { themes, themeLabel } from '../theme.config';
       themes.map((theme, index) => (
         <button
           type="button"
-          class="block w-full px-3 py-1.5 text-left text-ink transition-colors duration-150 hover:bg-base hover:text-accent"
+          class="theme-option block w-full px-3 py-1.5 text-left transition-colors duration-150"
           style="font-size:0.85rem"
           data-theme-option
           data-index={index}
-          role="menuitem"
+          role="menuitemradio"
+          aria-checked="false"
         >
           {themeLabel(theme)}
         </button>
@@ -66,15 +67,40 @@ import { themes, themeLabel } from '../theme.config';
     transform: translateY(0) scale(1);
     pointer-events: auto;
   }
+
+  .theme-option {
+    color: var(--color-ink);
+  }
+
+  .theme-option:hover {
+    background: var(--color-base);
+    color: var(--color-accent);
+  }
+
+  .theme-option[aria-checked='true'] {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .theme-option[aria-checked='true']::before {
+    content: '· ';
+  }
 </style>
 
 <script>
-  import { THEME_STORAGE_KEY } from '../theme.config';
+  import { THEME_STORAGE_KEY, getStoredThemeIndex } from '../theme.config';
 
   declare global {
     interface Window {
       __themeSwitcherInit?: boolean;
     }
+  }
+
+  function markActiveOption(menu: HTMLElement, active: number) {
+    menu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((opt) => {
+      const isActive = Number(opt.dataset.index) === active;
+      opt.setAttribute('aria-checked', String(isActive));
+    });
   }
 
   function setMenuOpen(menu: HTMLElement, toggle: HTMLElement, open: boolean) {
@@ -83,6 +109,7 @@ import { themes, themeLabel } from '../theme.config';
     if (prev) window.clearTimeout(prev);
 
     if (open) {
+      markActiveOption(menu, getStoredThemeIndex());
       menu.hidden = false;
       // Next frame so the transition runs from the closed styles.
       requestAnimationFrame(() => menu.setAttribute('data-open', ''));
@@ -114,20 +141,14 @@ import { themes, themeLabel } from '../theme.config';
       const optionButton = target.closest<HTMLElement>('[data-theme-option]');
       if (optionButton) {
         const index = Number(optionButton.dataset.index);
+        markActiveOption(menu, index);
         window.dispatchEvent(new CustomEvent('themechange', { detail: index }));
         setMenuOpen(menu, toggle, false);
         return;
       }
 
       if (target.closest('[data-theme-toggle]')) {
-        const willOpen = !menu.hasAttribute('data-open');
-        if (willOpen) {
-          const active = Number(localStorage.getItem(THEME_STORAGE_KEY) ?? 0);
-          menu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((opt) => {
-            opt.classList.toggle('text-accent', Number(opt.dataset.index) === active);
-          });
-        }
-        setMenuOpen(menu, toggle, willOpen);
+        setMenuOpen(menu, toggle, !menu.hasAttribute('data-open'));
         return;
       }
 

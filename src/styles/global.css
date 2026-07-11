@@ -54,8 +54,8 @@
     text-decoration-color: currentColor;
   }
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-base);
+    background: var(--color-selection, var(--color-accent));
+    color: var(--color-selection-fg, var(--color-base));
   }
 }
 
@@ -112,6 +112,55 @@
 .prose a {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* ── Label pills (tones assigned in src/data/projects.ts) ──────
+   The background is derived from the text color, so each tone only
+   defines a color per scheme and the pill tint follows for free.
+   Rotation lives on ::before so the label text stays upright.   */
+.pill {
+  position: relative;
+  display: inline-block;
+  padding: 0.05em 0.55em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  isolation: isolate;
+}
+.pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 3px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  transform: rotate(-2deg);
+}
+.pill-blue {
+  color: #a3bcff;
+}
+.pill-green {
+  color: #8fd6a8;
+}
+.pill-orange {
+  color: #eeaa72;
+}
+.pill-pink {
+  color: #f0a3c0;
+}
+.pill-neutral {
+  color: var(--color-muted);
+}
+[data-theme="light"] .pill-blue {
+  color: #3b5cdb;
+}
+[data-theme="light"] .pill-green {
+  color: #1e7a43;
+}
+[data-theme="light"] .pill-orange {
+  color: #b45309;
+}
+[data-theme="light"] .pill-pink {
+  color: #be2f6c;
 }
 
 /* Lucide external-link icon appended to http(s) links in Base.astro. */

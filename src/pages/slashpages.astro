@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+
+const pages = [
+  {
+    emoji: '🐻',
+    href: '/about',
+    path: '/about',
+    description: 'Me, myself, and I',
+  },
+  {
+    emoji: '📝',
+    href: '/now',
+    path: '/now',
+    description: "What I'm doing these days",
+  },
+  {
+    emoji: '📷',
+    href: '/photography',
+    path: '/photography',
+    description: 'Photography corner',
+  },
+  {
+    emoji: 'ℹ️',
+    href: '/uses',
+    path: '/uses',
+    description: 'My daily tools and hardware',
+  },
+  {
+    emoji: '🏆',
+    href: '/hackathons',
+    path: '/hackathons',
+    description: 'Competitions and weekend builds',
+  },
+];
+---
+
+<Base
+  title="Slashpages"
+  description="A collection of slashpages on this site — common root-level pages like /now and /uses."
+>
+  <h1 class="text-ink font-medium" style="font-size:1.1rem">
+    <span class="text-faint" data-marker></span> /slashpages
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    A collection of all the{' '}
+    <a href="#fn-slashpages" id="fnref-slashpages">Slashpages</a> of the site.
+    Some may disappear in the future.
+  </p>
+
+  <ul class="mt-8 space-y-2.5" style="font-size:0.95rem">
+    {
+      pages.map((page) => (
+        <li class="flex flex-wrap items-baseline gap-x-2">
+          <span aria-hidden="true">{page.emoji}</span>
+          <a href={page.href}>{page.path}</a>
+          <span class="text-faint">— {page.description}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p
+    id="fn-slashpages"
+    class="mt-12 text-faint"
+    style="font-size:0.8rem"
+  >
+    <sup>1</sup>{' '}
+    <a href="https://slashpages.net">https://slashpages.net</a>
+    — Slashpages are common pages you can add to your website, usually with a
+    standard, root-level slug like <a href="/now">/now</a>.{' '}
+    <a href="#fnref-slashpages" class="no-underline">↩</a>
+  </p>
+</Base>

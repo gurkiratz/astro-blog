@@ -16,7 +16,9 @@ export type PaletteKey =
   | "rule"
   | "tag-teal"
   | "tag-amber"
-  | "tag-pink";
+  | "tag-pink"
+  | "selection"
+  | "selection-fg";
 
 export interface ThemeEntry {
   /** Shown in the theme picker. Falls back to the image filename if omitted. */
@@ -71,6 +73,8 @@ export const PALETTE_KEYS: PaletteKey[] = [
   "tag-teal",
   "tag-amber",
   "tag-pink",
+  "selection",
+  "selection-fg",
 ];
 
 const DEFAULT_SCRIM_OPACITY = 85;
@@ -79,7 +83,7 @@ const DEFAULT_POSITION = "center";
 // The first entry is the default for new visitors.
 export const themes: ThemeEntry[] = [
   {
-    name: "Mono",
+    name: "Dark",
     color: "#ffffff",
     opacity: 100,
     palette: {
@@ -107,6 +111,8 @@ export const themes: ThemeEntry[] = [
       "tag-teal": "#0f766e",
       "tag-amber": "#b45309",
       "tag-pink": "#be185d",
+      selection: "#F7CF7B",
+      "selection-fg": "#171513",
     },
   },
   {
@@ -130,7 +136,7 @@ export const themes: ThemeEntry[] = [
     image: "/cafe-poster.jpg",
     video: "/cafe-video.mp4",
     color: "#e89a5d",
-    opacity: 82,
+    opacity: 76,
   },
   {
     name: "Dusk",
