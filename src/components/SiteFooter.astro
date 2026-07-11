@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import { site } from '../site.config';
+import FooterDoodle from './FooterDoodle.astro';
+
+const [posts, photos] = await Promise.all([
+  getCollection('writing', ({ data }) => !data.draft),
+  getCollection('photos', ({ data }) => !data.draft),
+]);
+const latestDate = [...posts, ...photos]
+  .map((entry) => entry.data.date)
+  .sort((a, b) => b.valueOf() - a.valueOf())[0];
+const updatedLabel = latestDate
+  ? latestDate.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
+---
+
+<footer
+  class="mt-16 pt-6 text-faint"
+  style="font-size:0.8rem"
+  transition:persist="site-footer"
+>
+  <p
+    class="mb-3 flex flex-wrap items-center gap-3"
+    data-local-time
+    data-timezone={site.timezone}
+  >
+    <span>
+      <span class="text-ink mr-0.5" data-local-time-value>—</span>
+      <span> in {site.location}</span>
+    </span>
+    <FooterDoodle />
+  </p>
+  {updatedLabel ? <p class="mb-3">Updated {updatedLabel}</p> : null}
+  <!-- <div class="flex flex-wrap gap-x-4">
+    {
+      site.social.map((item) => (
+        <a href={item.href} class="underline-offset-4 hover:underline">
+          {item.label}
+        </a>
+      ))
+    }
+  </div> -->
+</footer>
+
+<script>
+  let localTimeTimer: number | undefined;
+
+  function formatLocalTime(date: Date, timeZone: string): string {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).formatToParts(date);
+    const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${value.hour}:${value.minute}${value.dayPeriod.toLowerCase()}`;
+  }
+
+  function startLocalTime() {
+    if (localTimeTimer !== undefined) {
+      window.clearInterval(localTimeTimer);
+      localTimeTimer = undefined;
+    }
+
+    const element = document.querySelector<HTMLElement>('[data-local-time]');
+    const value = element?.querySelector<HTMLElement>('[data-local-time-value]');
+    const timeZone = element?.dataset.timezone;
+    if (!value || !timeZone) return;
+
+    const tick = () => {
+      try {
+        value.textContent = formatLocalTime(new Date(), timeZone);
+        return true;
+      } catch {
+        value.textContent = '—';
+        return false;
+      }
+    };
+
+    if (!tick()) return;
+    localTimeTimer = window.setInterval(tick, 30_000);
+  }
+
+  startLocalTime();
+  document.addEventListener('astro:page-load', startLocalTime);
+</script>

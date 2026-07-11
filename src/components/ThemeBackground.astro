@@ -1,10 +1,9 @@
 ---
-// Single persisted background layer, driven by whichever theme (image +
-// accent color) is selected via ThemeSwitcher.astro, which dispatches a
+// Single persisted background layer, driven by whichever theme is selected
+// via ThemeSwitcher.astro, which dispatches a
 // "themechange" CustomEvent<number> (the theme's index in theme.config.ts)
-// that this script listens for. The choice is saved to localStorage so it
-// survives reloads, and the initial pick is applied before paint by an
-// inline script in Base.astro's <head> (see there for why).
+// that this script listens for. ThemeBootstrap.astro owns persistence and
+// applies the theme's CSS tokens before paint; this module owns only media.
 //
 // The image is read from --theme-image/--theme-position on <html> (with the
 // first theme as fallback), so the FOUC script can set the right image
@@ -51,40 +50,9 @@ const fallbackImage = fallback.image ? `url('${fallback.image}')` : 'none';
 <script>
   import {
     themes,
-    THEME_STORAGE_KEY,
-    getStoredThemeIndex,
-    themeOpacityFraction,
-    themePosition,
-    PALETTE_KEYS,
+    getActiveThemeIndex,
     type ThemeEntry,
   } from '../theme.config';
-
-  function applyThemeStyle(theme: ThemeEntry) {
-    const root = document.documentElement.style;
-    root.setProperty('--color-accent', theme.color);
-    root.setProperty('--scrim-opacity', String(themeOpacityFraction(theme)));
-    root.setProperty(
-      '--theme-image',
-      theme.image ? `url('${theme.image}')` : 'none',
-    );
-    root.setProperty('--theme-position', themePosition(theme));
-    // Native UI (form controls, scrollbars) follows the theme's scheme, and
-    // the data-theme attribute switches Expressive Code's dark/light styles
-    // (see themeCssSelector in astro.config.mjs).
-    root.setProperty('color-scheme', theme.scheme ?? 'dark');
-    document.documentElement.setAttribute(
-      'data-theme',
-      theme.scheme ?? 'dark',
-    );
-    // Reset any palette overrides from the previous theme, then apply this
-    // theme's (if any) — image-less themes recolor the whole site this way.
-    for (const key of PALETTE_KEYS) {
-      const override = theme.palette?.[key];
-      if (override) root.setProperty(`--color-${key}`, override);
-      else root.removeProperty(`--color-${key}`);
-    }
-    applyThemeVideo(theme);
-  }
 
   function applyThemeVideo(theme: ThemeEntry) {
     const video = document.querySelector<HTMLVideoElement>(
@@ -128,13 +96,9 @@ const fallbackImage = fallback.image ? `url('${fallback.image}')` : 'none';
       (e.currentTarget as HTMLVideoElement).setAttribute('data-playing', '');
     });
 
-  // Re-applied on every page load, not just the first: Astro's View
-  // Transitions re-render <html> from each freshly-fetched page (which has
-  // no inline style — that's only ever added by this script and the FOUC
-  // script in Base.astro's <head>), which wipes the CSS variable overrides
-  // set on the previous page.
+  // Reconcile body-dependent media after Astro restores persisted elements.
   document.addEventListener('astro:page-load', () => {
-    applyThemeStyle(themes[getStoredThemeIndex()]);
+    applyThemeVideo(themes[getActiveThemeIndex()]);
   });
 
   window.addEventListener('themechange', (event) => {
@@ -142,7 +106,6 @@ const fallbackImage = fallback.image ? `url('${fallback.image}')` : 'none';
     const theme = themes[index];
     if (!theme) return;
 
-    localStorage.setItem(THEME_STORAGE_KEY, String(index));
-    applyThemeStyle(theme);
+    applyThemeVideo(theme);
   });
 </script>

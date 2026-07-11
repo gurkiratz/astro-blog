@@ -1,0 +1,83 @@
+---
+import {
+  PALETTE_KEYS,
+  THEME_STORAGE_KEY,
+  themeOpacityFraction,
+  themePosition,
+  themes,
+} from '../theme.config';
+
+const themeCatalog = themes.map((theme) => ({
+  scheme: theme.scheme ?? 'dark',
+  styles: {
+    '--color-accent': theme.color,
+    '--scrim-opacity': String(themeOpacityFraction(theme)),
+    '--theme-image': theme.image ? `url('${theme.image}')` : 'none',
+    '--theme-position': themePosition(theme),
+    ...Object.fromEntries(
+      PALETTE_KEYS.map((key) => [`--color-${key}`, theme.palette?.[key] ?? null]),
+    ),
+  },
+}));
+---
+
+<!--
+  This must remain a synchronous classic script in <head>: applying the stored
+  theme after parsing would flash the default palette. `define:vars` implies
+  `is:inline`, so Astro injects the catalog without turning it into a deferred
+  module script.
+-->
+<script define:vars={{ themeCatalog, storageKey: THEME_STORAGE_KEY }}>
+  (function () {
+    var activeIndex = 0;
+
+    function validIndex(value) {
+      var index = Number(value);
+      return Number.isInteger(index) && index >= 0 && index < themeCatalog.length
+        ? index
+        : 0;
+    }
+
+    try {
+      activeIndex = validIndex(localStorage.getItem(storageKey));
+    } catch (error) {
+      activeIndex = 0;
+    }
+
+    function applyTheme(index) {
+      activeIndex = validIndex(index);
+      var theme = themeCatalog[activeIndex];
+      var element = document.documentElement;
+      var root = element.style;
+
+      for (var property in theme.styles) {
+        var value = theme.styles[property];
+        if (value === null) root.removeProperty(property);
+        else root.setProperty(property, value);
+      }
+
+      root.setProperty('color-scheme', theme.scheme);
+      element.dataset.theme = theme.scheme;
+      element.dataset.themeIndex = String(activeIndex);
+    }
+
+    applyTheme(activeIndex);
+
+    if (Reflect.get(window, '__themeBootstrapInitialized')) return;
+    Reflect.set(window, '__themeBootstrapInitialized', true);
+
+    window.addEventListener('themechange', function (event) {
+      var index = validIndex(event.detail);
+      try {
+        localStorage.setItem(storageKey, String(index));
+      } catch (error) {
+        // The in-memory selection still applies when storage is unavailable.
+      }
+      applyTheme(index);
+    });
+
+    document.addEventListener('astro:after-swap', function () {
+      applyTheme(activeIndex);
+    });
+  })();
+</script>

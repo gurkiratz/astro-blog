@@ -18,8 +18,8 @@ export default defineConfig({
     expressiveCode({
       // One dark + one light theme; which one applies is driven by the
       // `data-theme="dark|light"` attribute on <html>, kept in sync with the
-      // active site theme's `scheme` by ThemeBackground.astro (and the FOUC
-      // script in Base.astro) — NOT by the visitor's OS preference.
+      // active site theme's `scheme` by ThemeBootstrap.astro — NOT by the
+      // visitor's OS preference.
       themes: ["vitesse-dark", "vitesse-light"],
       useDarkModeMediaQuery: false,
       themeCssSelector: (theme) => `[data-theme='${theme.type}']`,

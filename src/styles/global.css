@@ -163,7 +163,7 @@
   color: #be2f6c;
 }
 
-/* Lucide external-link icon appended to http(s) links in Base.astro. */
+/* Lucide icon appended to http(s) links by ExternalLinks.astro. */
 .external-link-icon {
   display: inline-block;
   width: 0.85em;

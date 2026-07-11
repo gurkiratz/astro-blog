@@ -1,17 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import { getCollection } from 'astro:content';
 import '../styles/global.css';
 import { site } from '../site.config';
-import {
-  themes,
-  THEME_STORAGE_KEY,
-  themeOpacityFraction,
-  themePosition,
-} from '../theme.config';
-import ExternalLinkIcon from '../components/ExternalLinkIcon.astro';
-import FooterDoodle from '../components/FooterDoodle.astro';
+import { themes, themeOpacityFraction } from '../theme.config';
+import ExternalLinks from '../components/ExternalLinks.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
+import ThemeBootstrap from '../components/ThemeBootstrap.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 
 interface Props {
@@ -21,21 +16,6 @@ interface Props {
 
 const { title, description = site.description } = Astro.props;
 const pageTitle = title ? `${title} — ${site.name}` : site.name;
-
-const [posts, photos] = await Promise.all([
-  getCollection('writing', ({ data }) => !data.draft),
-  getCollection('photos', ({ data }) => !data.draft),
-]);
-const latestDate = [...posts, ...photos]
-  .map((entry) => entry.data.date)
-  .sort((a, b) => b.valueOf() - a.valueOf())[0];
-const updatedLabel = latestDate
-  ? latestDate.toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
-  : null;
 ---
 
 <!doctype html>
@@ -56,41 +36,8 @@ const updatedLabel = latestDate
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta name="generator" content={Astro.generator} />
+    <ThemeBootstrap />
     <ClientRouter />
-    {
-      /* is:inline keeps this a synchronous classic script (Astro's normal
-      script processing emits `type="module"`, which defers execution past
-      first paint — too late to avoid a flash). That also rules out
-      define:vars, which needs Astro's normal processing to inject values,
-      so the theme colors/key are serialized into the script text directly
-      via set:html instead. Applies the saved accent color and background
-      image before first paint, so the header nav doesn't flash the default
-      color and then jump to the stored one once ThemeBackground.astro's
-      module script catches up. */
-    }
-    <script
-      is:inline
-      set:html={`try {
-        var colors = ${JSON.stringify(themes.map((t) => t.color))};
-        var opacities = ${JSON.stringify(themes.map((t) => themeOpacityFraction(t)))};
-        var images = ${JSON.stringify(themes.map((t) => t.image ?? null))};
-        var positions = ${JSON.stringify(themes.map((t) => themePosition(t)))};
-        var palettes = ${JSON.stringify(themes.map((t) => t.palette ?? {}))};
-        var schemes = ${JSON.stringify(themes.map((t) => t.scheme ?? "dark"))};
-        var i = parseInt(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}) || '0', 10);
-        if (!(i >= 0 && i < colors.length)) i = 0;
-        var root = document.documentElement.style;
-        root.setProperty('--color-accent', colors[i]);
-        root.setProperty('--scrim-opacity', opacities[i]);
-        root.setProperty('--theme-image', images[i] ? "url('" + images[i] + "')" : 'none');
-        root.setProperty('--theme-position', positions[i]);
-        root.setProperty('color-scheme', schemes[i]);
-        document.documentElement.setAttribute('data-theme', schemes[i]);
-        for (var key in palettes[i]) {
-          root.setProperty('--color-' + key, palettes[i][key]);
-        }
-      } catch (e) {}`}
-    />
   </head>
   <body style={`--marker: '${site.marker}'`}>
     <ThemeBackground />
@@ -120,7 +67,7 @@ const updatedLabel = latestDate
             </p>
           ) : null
         }
-        <nav class="mt-6 flex flex-wrap gap-x-4 gap-y-1">
+        <nav class="mt-2 flex flex-wrap gap-x-4 gap-y-1">
           {
             site.nav.map((item) => (
               <a
@@ -138,95 +85,9 @@ const updatedLabel = latestDate
         <slot />
       </main>
 
-      <footer
-        class="mt-16 pt-6 text-faint"
-        style="font-size:0.8rem"
-        transition:persist="site-footer"
-      >
-        <p
-          class="mb-3 flex flex-wrap items-center gap-3"
-          data-local-time
-          data-timezone={site.timezone}
-          data-location={site.location}
-        >
-          <span>
-            <span class="text-ink" data-local-time-value>—</span>
-            <span> in {site.location}</span>
-          </span>
-          <FooterDoodle />
-        </p>
-        {
-          updatedLabel ? (
-            <p class="mb-3">Updated {updatedLabel}</p>
-          ) : null
-        }
-        <div class="flex flex-wrap gap-x-4">
-          {
-            site.social.map((s) => (
-              <a href={s.href} class="underline-offset-4 hover:underline">
-                {s.label}
-              </a>
-            ))
-          }
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
-    <template id="external-link-icon-template">
-      <ExternalLinkIcon />
-    </template>
-    <script is:inline>
-      function enhanceExternalLinks(root) {
-        var template = document.getElementById('external-link-icon-template');
-        if (!template) return;
-
-        (root || document).querySelectorAll('a[href^="http"]').forEach(function (a) {
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          if (a.querySelector('.external-link-icon')) return;
-          a.appendChild(template.content.cloneNode(true));
-        });
-      }
-
-      function formatLocalTime(date, timeZone) {
-        var parts = new Intl.DateTimeFormat('en-US', {
-          timeZone: timeZone,
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        }).formatToParts(date);
-        var hour = '';
-        var minute = '';
-        var dayPeriod = '';
-        for (var i = 0; i < parts.length; i++) {
-          if (parts[i].type === 'hour') hour = parts[i].value;
-          if (parts[i].type === 'minute') minute = parts[i].value;
-          if (parts[i].type === 'dayPeriod') dayPeriod = parts[i].value.toLowerCase();
-        }
-        return hour + ':' + minute + dayPeriod;
-      }
-
-      var localTimeTimer = null;
-      function startLocalTime() {
-        var el = document.querySelector('[data-local-time]');
-        if (!el) return;
-        var value = el.querySelector('[data-local-time-value]');
-        if (!value) return;
-        var timeZone = el.getAttribute('data-timezone') || 'America/Toronto';
-        function tick() {
-          value.textContent = formatLocalTime(new Date(), timeZone);
-        }
-        tick();
-        if (localTimeTimer) clearInterval(localTimeTimer);
-        localTimeTimer = setInterval(tick, 30000);
-      }
-
-      enhanceExternalLinks();
-      startLocalTime();
-      document.addEventListener('astro:page-load', function () {
-        enhanceExternalLinks(document);
-        startLocalTime();
-      });
-    </script>
+    <ExternalLinks />
     <script>
       import { bind } from 'cuelume';
 

@@ -89,7 +89,7 @@ import { themes, themeLabel } from '../theme.config';
 </style>
 
 <script>
-  import { THEME_STORAGE_KEY, getStoredThemeIndex } from '../theme.config';
+  import { getActiveThemeIndex } from '../theme.config';
 
   declare global {
     interface Window {
@@ -110,7 +110,7 @@ import { themes, themeLabel } from '../theme.config';
     if (prev) window.clearTimeout(prev);
 
     if (open) {
-      markActiveOption(menu, getStoredThemeIndex());
+      markActiveOption(menu, getActiveThemeIndex());
       menu.hidden = false;
       // Next frame so the transition runs from the closed styles.
       requestAnimationFrame(() => menu.setAttribute('data-open', ''));

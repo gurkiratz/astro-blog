@@ -164,14 +164,24 @@ export function themeLabel(theme: ThemeEntry): string {
   return filename ? filename.replace(/\.[a-z0-9]+$/i, "") : "Theme";
 }
 
-// Also hardcoded (deliberately, see the comment there) in the FOUC-avoiding
-// inline script in Base.astro's <head> — keep both in sync if this changes.
 export const THEME_STORAGE_KEY = "theme";
 
 export function getStoredThemeIndex(): number {
-  const raw = localStorage.getItem(THEME_STORAGE_KEY);
-  const index = raw === null ? 0 : Number(raw);
+  try {
+    const raw = localStorage.getItem(THEME_STORAGE_KEY);
+    const index = raw === null ? 0 : Number(raw);
+    return Number.isInteger(index) && index >= 0 && index < themes.length
+      ? index
+      : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** The theme already applied to the document, falling back to persisted state. */
+export function getActiveThemeIndex(): number {
+  const index = Number(document.documentElement.dataset.themeIndex);
   return Number.isInteger(index) && index >= 0 && index < themes.length
     ? index
-    : 0;
+    : getStoredThemeIndex();
 }
