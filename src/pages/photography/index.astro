@@ -19,7 +19,7 @@ const photos = (await getCollection('photos', ({ data }) => !data.draft)).sort(
       photos.map((photo) => (
         <a
           href={`/photography/${photo.id}/`}
-          class="group block hover:no-underline"
+          class="group block hover:no-underline motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985]"
         >
           <div class="aspect-[4/3] overflow-hidden rounded border border-rule">
             <Image
@@ -27,7 +27,7 @@ const photos = (await getCollection('photos', ({ data }) => !data.draft)).sort(
               alt={photo.data.alt}
               widths={[300, 600]}
               sizes="(min-width: 768px) 230px, 45vw"
-              class="h-full w-full object-cover transition-opacity group-hover:opacity-80"
+              class="h-full w-full object-cover transition-[opacity,transform] duration-500 ease-out group-hover:opacity-90 motion-safe:group-hover:scale-[1.03]"
             />
           </div>
           {photo.data.caption && (

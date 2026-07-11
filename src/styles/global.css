@@ -47,16 +47,88 @@
     text-decoration: underline;
     text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
     text-underline-offset: 2.5px;
-    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    transition:
+      color 0.15s ease,
+      text-decoration-color 0.15s ease,
+      opacity 0.25s ease;
   }
   a:hover {
     color: var(--color-accent);
     text-decoration-color: currentColor;
   }
+  /* Feedback lives on the press: dim instantly on pointer-down, ease back
+     on release. */
+  a:active {
+    opacity: 0.55;
+    transition-duration: 0s;
+  }
+  /* Large text wants tighter tracking than body copy; balance keeps
+     multi-line titles from orphaning a word. */
+  h1 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
   ::selection {
     background: var(--color-selection, var(--color-accent));
     color: var(--color-selection-fg, var(--color-base));
   }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ── Motion ────────────────────────────────────────────────────
+   Page content settles in with a gentle rise — an ease-out curve that
+   starts fast (responsive) and lands softly, like a critically damped
+   spring. Runs on first paint and again on every client-side
+   navigation, since <main> is a fresh node each swap.               */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+main {
+  animation: page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced motion still gets feedback — a cross-fade, not a slide. */
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: none;
+    }
+  }
+}
+
+/* ── Theme easing ──────────────────────────────────────────────
+   Applied by ThemeBootstrap for ~400ms around a theme switch so the
+   palette glides instead of hard-cutting — abrupt dark↔light jumps
+   are jarring (and worse with reduced motion, so this always runs;
+   color cross-fades are non-vestibular). Elements that own their own
+   transition (theme menu, background scrim) opt out via
+   data-theme-easing-exempt.                                      */
+html.theme-easing,
+html.theme-easing
+  body
+  *:not([data-theme-easing-exempt]):not([data-theme-easing-exempt] *) {
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    fill 0.35s ease,
+    stroke 0.35s ease;
 }
 
 /* Section marker glyph — driven by --marker (set from site.config.ts via the

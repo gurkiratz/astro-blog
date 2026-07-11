@@ -66,6 +66,8 @@ const themeCatalog = themes.map((theme) => ({
     if (Reflect.get(window, '__themeBootstrapInitialized')) return;
     Reflect.set(window, '__themeBootstrapInitialized', true);
 
+    var easingTimer = 0;
+
     window.addEventListener('themechange', function (event) {
       var index = validIndex(event.detail);
       try {
@@ -73,7 +75,16 @@ const themeCatalog = themes.map((theme) => ({
       } catch (error) {
         // The in-memory selection still applies when storage is unavailable.
       }
+      // Ease the palette swap (see .theme-easing in global.css). Color fades
+      // are non-vestibular, so this intentionally ignores reduced motion —
+      // an abrupt dark↔light brightness jump is the harsher experience.
+      var element = document.documentElement;
+      element.classList.add('theme-easing');
       applyTheme(index);
+      window.clearTimeout(easingTimer);
+      easingTimer = window.setTimeout(function () {
+        element.classList.remove('theme-easing');
+      }, 400);
     });
 
     document.addEventListener('astro:after-swap', function () {
