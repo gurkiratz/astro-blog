@@ -17,3 +17,6 @@ pnpm-debug.log*
 # cloudflare / deploy
 .wrangler/
 .vercel/
+# Obsidian local editor state (keep plugins/settings tracked)
+**/.obsidian/workspace.json
+**/.obsidian/app.json
