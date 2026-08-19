@@ -37,32 +37,14 @@ export const projects: Project[] = [
     year: "2026",
     labels: ["New"],
     description:
-      "A web app for playing kirtan sewa audio files fromkirtansewa.net.",
+      "A web app for playing kirtan sewa audio files from kirtansewa.net.",
     links: [{ label: "live", href: "https://kirtansewa-player.vercel.app/" }],
   },
   {
     name: "this site",
     year: "2026",
     labels: ["Building"],
-    description:
-      "A hand-built personal site + blog. Astro, Tailwind, no templates.",
-    links: [{ label: "repo", href: "https://github.com/your-handle/site" }],
-  },
-  {
-    name: "dotfiles",
-    year: "2025",
-    description: "My Arch + Hyprland + Neovim setup, kept reproducible.",
-    links: [{ label: "repo", href: "https://github.com/your-handle/dotfiles" }],
-  },
-  {
-    name: "example project",
-    year: "2024",
-    labels: ["Archived"],
-    description:
-      "A placeholder — replace these with your real work in src/data/projects.ts.",
-    links: [
-      { label: "repo", href: "#" },
-      { label: "live", href: "#" },
-    ],
+    description: "A personal blog-like site with Astro and Tailwind",
+    links: [],
   },
 ];

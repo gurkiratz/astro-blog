@@ -19,12 +19,15 @@ import { uses } from '../data/uses';
         </h2>
         <ul class="space-y-1.5">
           {group.items.map((item) => (
-            <li class="flex flex-wrap items-baseline gap-x-3">
-              <span class="text-ink">{item.name}</span>
+            <li class="text-ink" style="font-size:0.95rem">
+              {item.label && <span>{item.label}: </span>}
+              {item.url ? (
+                <a href={item.url}>{item.name}</a>
+              ) : (
+                <span>{item.name}</span>
+              )}
               {item.note && (
-                <span class="text-faint" style="font-size:0.85rem">
-                  {item.note}
-                </span>
+                <span class="text-faint"> - {item.note}</span>
               )}
             </li>
           ))}

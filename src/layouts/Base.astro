@@ -3,7 +3,6 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import { site } from '../site.config';
 import { themes, themeOpacityFraction } from '../theme.config';
-import ExternalLinks from '../components/ExternalLinks.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
@@ -60,7 +59,6 @@ const pageTitle = title ? `${title} — ${site.name}` : site.name;
 
       <SiteFooter />
     </div>
-    <ExternalLinks />
     <script>
       import { bind } from 'cuelume';
 

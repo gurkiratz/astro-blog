@@ -18,6 +18,8 @@ export const links = {
   github: "https://github.com/gurkiratz",
   linkedin: "https://www.linkedin.com/in/gurkiratz/",
   email: "mailto:gurkirat.singh@humber.ca",
+  resume:
+    "https://gurkiratz.github.io/resume-manager/resumes/Resume_Gurkirat_Singh.pdf",
   rss: "/rss.xml",
 } as const;
 
@@ -47,13 +49,16 @@ export const site = {
   url: "https://gurkiratz.co",
 
   /** Default meta description for pages that don't set their own. */
-  description:
-    "Personal site — writing about code, work life, and small things worth keeping.",
+  description: "Personal site - writing about code, work life, photos, music.",
 
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
+    {
+      label: "Resume",
+      href: "https://gurkiratz.github.io/resume-manager/resumes/Resume_Gurkirat_Singh.pdf",
+    },
     { label: "Projects", href: "/projects" },
     { label: "Writing", href: "/writing" },
     // { label: "Now", href: "/now" },
@@ -71,5 +76,6 @@ export const site = {
     { label: "GitHub", href: links.github },
     { label: "LinkedIn", href: links.linkedin },
     { label: "Email", href: links.email },
+    { label: "Resume", href: links.resume },
   ] satisfies SocialItem[],
 };
