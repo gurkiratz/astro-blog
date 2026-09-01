@@ -3,10 +3,17 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import expressiveCode from "astro-expressive-code";
+import rehypeFigcaption from "./src/lib/rehype-figcaption.mjs";
 
 // Set this to your real domain. It's used for canonical URLs and the RSS feed.
 export default defineConfig({
   site: "https://gurkiratz.co",
+
+  markdown: {
+    // Alt text on a standalone image becomes a visible caption underneath it.
+    // See src/lib/rehype-figcaption.mjs.
+    rehypePlugins: [rehypeFigcaption],
+  },
 
   vite: {
     plugins: [tailwindcss()],

@@ -1,17 +1,15 @@
 ---
-title: What I do other than code part 1 - Biking
+title: Things I do other than code part 1 - Biking
 date: 2026-08-30
 tags: []
 description:
 draft: false
 ---
-![](../assets/B90C5F36-A1F9-4DBC-8FB7-3B31CD455C74_4_5005_c.jpeg)
-*Trying to look cool on my bike hehe*
+![Trying to look cool on my bike hehe](../assets/B90C5F36-A1F9-4DBC-8FB7-3B31CD455C74_4_5005_c.jpeg)
 
-I bought myself a Decathlon BT-120 from fb marketplace around 2 years ago and have been riding it ever since.
+I bought myself a [Decathlon Riverside 120](https://www.decathlon.ca/en/p/hybrid-bike-riverside-120/300806/c208m8771010) from Facebook marketplace around 2 years ago and have been riding it ever since.
 
-![](../assets/ED69CBF4-0444-4A93-AEBA-FD4CE9FAB429_1_102_o.jpeg)
-> Commuting with my bike, Bramalea GO Station, 2024
+![ Commuting with my bike, Bramalea GO Station, 2024](../assets/ED69CBF4-0444-4A93-AEBA-FD4CE9FAB429_1_102_o.jpeg)
 
 Its such a nice bike with big frame, good tires, brakes and all the basic things you need. I've sometimes wanted to upgrade it, but I kept putting it off. Initially, after buying it, I have used it to commute to Mount Pleasant GO Station to take my daily trains to work. I really enjoyed riding it to a nearby [Gurdwara](https://www.basicsofsikhi.com/post/what-should-i-do-before-visiting-a-gurdwara) (Sikh Prayer House) and eating Langar (I was really lazy about making food back then)
 
