@@ -10,6 +10,11 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        "@": new URL("./src", import.meta.url).pathname,
+      },
+    },
   },
 
   // NOTE: expressiveCode() MUST come before mdx() so code blocks inside .mdx
