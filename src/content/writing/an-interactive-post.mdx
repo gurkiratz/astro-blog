@@ -1,0 +1,37 @@
+---
+title: An interactive post
+date: 2026-06-29
+tags: [meta, astro]
+description: What .mdx posts can do — components and a dash of interactivity, no React required.
+---
+
+import Callout from '@/components/Callout.astro';
+import Counter from '@/components/Counter.astro';
+
+Most posts here are plain markdown. This one is **`.mdx`**, which lets me drop
+components straight into the prose when a post actually needs one.
+
+<Callout type="note">
+  This box is an Astro component imported into the post — styled to match the
+  site, and it ships zero JavaScript.
+</Callout>
+
+Everything markdown still works exactly as before — **bold**, `inline code`,
+links, and lists:
+
+- write in markdown by default
+- reach for a component only when the writing needs it
+- keep the page lean
+
+When a post genuinely needs interactivity, an _island_ handles it. The counter
+below is an Astro component with a tiny vanilla `<script>` — interactive, and
+still no framework:
+
+<Counter start={3} />
+
+That's the whole philosophy: markdown for words, a component for the rare
+moment words aren't enough.
+
+<Callout type="warn">
+  Use `.mdx` sparingly. Plain `.md` is faster to write and keeps posts portable.
+</Callout>

@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sync-content": "bash scripts/sync-content.sh",
+    "predev": "npm run sync-content",
+    "prebuild": "npm run sync-content",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
