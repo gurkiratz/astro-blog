@@ -8,7 +8,7 @@ tags:
 description: The inspirations, the stack, and why I hand-built this instead of using a platform.
 draft: false
 ---
-## the inspiration
+## The inspiration
 
 A few that shaped this one:
 
@@ -18,17 +18,14 @@ A few that shaped this one:
 
 I also included the [now page](https://nownownow.com), the[slash pages](https://slashpages.net) convention, and [uses.tech](https://uses.tech).
 
-## the stack
-
-
+## Tech Stack
 - **[Astro](https://astro.build)** 
 - **Tailwind v4** 
 - **MDX** 
 - **Expressive Code**
 - **Vercel** for hosting
+- Clicky button sound
 
 Underneath it's basically markdown files and a bit of CSS.
-
 ## the look
-
 custom themes, clicky button sounds, minimalist

@@ -33,6 +33,13 @@ export function labelTone(label: string): LabelTone {
 
 export const projects: Project[] = [
   {
+    name: "Global Sikhs Redesign Website",
+    year: "2026",
+    labels: ["Building", "New"],
+    description: "A redesign of the Global Sikhs website",
+    links: [{ label: "live", href: "https://global-sikhs-delta.vercel.app" }],
+  },
+  {
     name: "Kirtan Sewa Player",
     year: "2026",
     labels: ["New"],
@@ -44,7 +51,9 @@ export const projects: Project[] = [
     name: "this site",
     year: "2026",
     labels: ["Building"],
-    description: "A personal blog-like site with Astro and Tailwind",
-    links: [],
+    description: "A personal blog site built with Astro and Tailwind",
+    links: [
+      { label: "source", href: "https://github.com/gurkiratz/astro-blog" },
+    ],
   },
 ];

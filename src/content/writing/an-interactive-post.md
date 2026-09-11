@@ -3,6 +3,7 @@ title: An interactive post
 date: 2026-06-29
 tags: [meta, astro]
 description: What .mdx posts can do — components and a dash of interactivity, no React required.
+draft: true
 ---
 
 import Callout from '@/components/Callout.astro';

@@ -7,7 +7,7 @@ A hand-built personal site + blog. Astro + Tailwind v4, dark "terminal" theme.
 - [Astro](https://astro.build) — static site generator
 - [Tailwind CSS v4](https://tailwindcss.com) — via the `@tailwindcss/vite` plugin
 - Content collections for `/writing`
-- Deploys to Cloudflare Pages
+- Deploys to Vercel
 
 ## develop
 
