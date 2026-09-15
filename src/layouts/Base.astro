@@ -11,10 +11,30 @@ import ThemeBootstrap from '../components/ThemeBootstrap.astro';
 interface Props {
   title?: string;
   description?: string;
+  /**
+   * Let <main> span the full viewport width instead of the 40rem measure.
+   * The header (and footer, when shown) stay inside the measure, so the page
+   * still reads as part of the site. Used by /canvas.
+   */
+  bleed?: boolean;
+  /** Set false for pages that own the whole viewport, e.g. /canvas. */
+  footer?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const {
+  title,
+  description = site.description,
+  bleed = false,
+  footer = true,
+} = Astro.props;
 const pageTitle = title ? `${title} — ${site.name}` : site.name;
+
+// In bleed mode the padding moves off the shell and onto the header/footer
+// rails, so only those stay constrained while <main> runs edge to edge.
+const shellClass = bleed
+  ? 'relative z-10 flex min-h-dvh flex-col'
+  : 'relative z-10 mx-auto flex min-h-dvh max-w-[40rem] flex-col px-6 py-10 md:py-14';
+const railClass = bleed ? 'mx-auto w-full max-w-[40rem] px-6' : null;
 ---
 
 <!doctype html>
@@ -48,16 +68,22 @@ const pageTitle = title ? `${title} — ${site.name}` : site.name;
       data-theme-easing-exempt
     >
     </div>
-    <div
-      class="relative z-10 mx-auto flex min-h-dvh max-w-[40rem] flex-col px-6 py-10 md:py-14"
-    >
-      <SiteHeader />
+    <div class={shellClass}>
+      <div class:list={[railClass, bleed && 'pt-10 md:pt-14']}>
+        <SiteHeader />
+      </div>
 
       <main class="mt-9 flex-1">
         <slot />
       </main>
 
-      <SiteFooter />
+      {
+        footer ? (
+          <div class:list={[railClass, bleed && 'pb-10 md:pb-14']}>
+            <SiteFooter />
+          </div>
+        ) : null
+      }
     </div>
     <script>
       import { bind } from 'cuelume';

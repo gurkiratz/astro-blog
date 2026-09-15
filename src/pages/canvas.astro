@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import Canvas from '../components/Canvas';
+---
+
+<Base
+  title="Canvas"
+  description="An infinite canvas to sketch and think on. Saved in your browser."
+  bleed
+  footer={false}
+>
+  <div class="canvas-surface">
+    <!-- tldraw reads the DOM on mount and has no meaningful server render,
+         so this is client:only rather than a hydrated island. -->
+    <Canvas client:only="react" />
+  </div>
+</Base>
+
+<style is:global>
+  /* The canvas owns the viewport: the page itself must not scroll, or wheel
+     and trackpad gestures fight tldraw's pan/zoom. */
+  html,
+  body {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  /* Give <main> a definite height via flex so the canvas can fill the space
+     under the header without percentage-height guesswork. */
+  main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    /* The site's page-enter rise would move the canvas out from under
+       tldraw's measurements on mount. Fade only. */
+    animation-name: canvas-enter;
+  }
+
+  @keyframes canvas-enter {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .canvas-surface {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .canvas-surface .tl-container {
+    /* tldraw sizes its container with `height: 100%`, which resolves to zero
+       here — Astro's <astro-island> wrapper is `display: contents`, so the
+       nearest layout parent is a flex item with an auto specified height. Pin
+       it to the surface box instead. */
+    position: absolute;
+    inset: 0;
+    /* No frame, no chrome of its own — just the tools floating over the
+       site's own background. */
+    background: transparent;
+    border: none;
+  }
+  /* Used for text outlines and the hairlines between UI controls, so it
+     needs to be the site's real background color, not `transparent`. */
+  .canvas-surface .tl-theme__light,
+  .canvas-surface .tl-theme__dark {
+    --tl-color-background: var(--color-base);
+  }
+
+  /* Loading and configuration messages, shown in place of the editor. */
+  .canvas-message {
+    margin: 0;
+    padding: 0 1.5rem;
+    color: var(--color-faint);
+    font-size: 0.9rem;
+  }
+
+  /* Save state and sign-in both sit top-left, under tldraw's page-menu row.
+     Not top-right: that's where the style panel opens the moment you pick a
+     drawing tool, which is exactly when "Saving…" appears. */
+
+  /* Only rendered while saving or after a failure — a canvas that is quietly
+     up to date says nothing. */
+  .canvas-status {
+    position: absolute;
+    top: 3rem;
+    left: 1rem;
+    z-index: 1000;
+    margin: 0;
+    max-width: min(18rem, calc(100% - 2rem));
+    color: var(--color-faint);
+    font-size: 0.75rem;
+    pointer-events: none;
+  }
+
+  /* Owner sign-in, only present at /canvas?edit. */
+  .canvas-auth {
+    position: absolute;
+    top: 4.5rem;
+    left: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: min(18rem, calc(100% - 2rem));
+    color: var(--color-faint);
+    font-size: 0.75rem;
+    /* The panel is a box floating over the canvas, so without this it eats
+       every stroke that starts inside it — including the empty gaps around
+       the text. Only the controls themselves need to be clickable. */
+    pointer-events: none;
+  }
+  .canvas-auth input,
+  .canvas-auth button {
+    pointer-events: auto;
+  }
+  .canvas-auth input {
+    padding: 0.2rem 0.45rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 4px;
+    background: var(--color-base);
+    color: var(--color-ink);
+    font: inherit;
+  }
+  .canvas-auth button {
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .canvas-auth button:hover {
+    color: var(--color-accent);
+  }
+  .canvas-auth button:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+</style>

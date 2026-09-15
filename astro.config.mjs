@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import expressiveCode from "astro-expressive-code";
+import react from "@astrojs/react";
 import rehypeFigcaption from "./src/lib/rehype-figcaption.mjs";
 
 // Set this to your real domain. It's used for canonical URLs and the RSS feed.
@@ -60,5 +61,8 @@ export default defineConfig({
       },
     }),
     mdx(),
+    // Only /canvas ships React (the tldraw island); every other page stays
+    // zero-JS, so the integration costs nothing elsewhere.
+    react(),
   ],
 });
