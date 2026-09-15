@@ -1,5 +1,5 @@
 ---
-title: Things I do other than code part 2 - Music
+title: Music
 date: 2026-08-30
 tags:
   - personal

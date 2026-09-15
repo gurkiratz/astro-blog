@@ -1,5 +1,5 @@
 ---
-title: Things I do other than code part 1 - Biking
+title: Biking
 date: 2026-08-30
 tags: []
 description:
