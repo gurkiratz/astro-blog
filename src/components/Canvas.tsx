@@ -34,6 +34,19 @@ const SAVE_DEBOUNCE_MS = 800;
 const SAVE_MAX_WAIT_MS = 5000;
 const SESSION_DEBOUNCE_MS = 500;
 
+/**
+ * Required on any real domain. Without a key tldraw resolves to
+ * "unlicensed-production" and swaps the whole editor for a hidden placeholder
+ * after 5 seconds — the document is untouched, but the canvas vanishes.
+ *
+ * tldraw treats plain http and loopback hosts as development, so a missing key
+ * is invisible on localhost and only shows up once deployed. Passed explicitly
+ * rather than relying on tldraw reading the env itself: it looks for
+ * `import.meta.env.PUBLIC_TLDRAW_LICENSE_KEY` from inside its own bundle,
+ * where Vite won't statically replace it.
+ */
+const LICENSE_KEY = import.meta.env.PUBLIC_TLDRAW_LICENSE_KEY || undefined;
+
 const components: TLEditorComponents = {
   // No canvas background of tldraw's own — the site's background (flat color,
   // image, or video, depending on the active theme) shows straight through.
@@ -325,6 +338,7 @@ export default function Canvas() {
         assets={assetStore}
         colorScheme={colorScheme}
         components={components}
+        licenseKey={LICENSE_KEY}
         onMount={handleMount}
       />
       {showSignIn && <CanvasSignIn email={email} canEdit={canEdit} />}
