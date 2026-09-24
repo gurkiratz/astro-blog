@@ -310,6 +310,22 @@ html.theme-easing
   font-size: 0.95em;
   color: var(--color-faint);
 }
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.prose th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+.prose th,
+.prose td {
+  padding: 0.4em 0.75em 0.4em 0;
+  border-bottom: 1px solid var(--color-rule);
+}
 .prose hr {
   border: 0;
   border-top: 1px solid var(--color-rule);

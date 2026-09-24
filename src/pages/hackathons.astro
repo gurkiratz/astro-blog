@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { hackathons, labelTone } from '../data/hackathons';
+import { hackathons, labelTone as hackathonLabelTone } from '../data/hackathons';
+import { hackathonProjects, labelTone } from '../data/projects';
 ---
 
 <Base title="Hackathons">
@@ -21,7 +22,7 @@ import { hackathons, labelTone } from '../data/hackathons';
               {h.year}
             </span>
             {h.labels?.map((label) => (
-              <span class={`pill pill-${labelTone(label)}`}>{label}</span>
+              <span class={`pill pill-${hackathonLabelTone(label)}`}>{label}</span>
             ))}
           </div>
           <p class="mt-1 text-muted" style="font-size:0.9rem">
@@ -32,6 +33,34 @@ import { hackathons, labelTone } from '../data/hackathons';
           {h.links && h.links.length > 0 && (
             <p class="mt-1" style="font-size:0.85rem">
               {h.links.map((l, i) => (
+                <>
+                  {i > 0 && <span class="text-faint"> · </span>}
+                  <a href={l.href}>{l.label}</a>
+                </>
+              ))}
+            </p>
+          )}
+        </li>
+      ))
+    }
+    {
+      hackathonProjects.map((p) => (
+        <li>
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span class="text-ink">{p.name}</span>
+            <span class="text-faint" style="font-size:0.8rem">
+              {p.year}
+            </span>
+            {p.labels?.map((label) => (
+              <span class={`pill pill-${labelTone(label)}`}>{label}</span>
+            ))}
+          </div>
+          <p class="mt-1 text-muted" style="font-size:0.9rem">
+            {p.description}
+          </p>
+          {p.links && p.links.length > 0 && (
+            <p class="mt-1" style="font-size:0.85rem">
+              {p.links.map((l, i) => (
                 <>
                   {i > 0 && <span class="text-faint"> · </span>}
                   <a href={l.href}>{l.label}</a>

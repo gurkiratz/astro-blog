@@ -1,0 +1,37 @@
+---
+// Layout for standalone project write-ups written as .mdx pages in
+// src/pages/ (e.g. /human-on-the-podium). They live outside src/content
+// because that folder is mirrored from the Obsidian vault and would be
+// wiped by scripts/sync-content.sh.
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description?: string;
+    /** Small line under the title, e.g. "Hack the North 2026". */
+    subtitle?: string;
+  };
+}
+
+const { title, description, subtitle } = Astro.props.frontmatter;
+---
+
+<Base title={title} description={description}>
+  <article>
+    <a
+      href="/projects"
+      class="text-faint no-underline hover:text-ink"
+      style="font-size:0.9rem">← Projects</a
+    >
+    <h1 class="mt-4 text-ink font-medium leading-tight" style="font-size:1.35rem">
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="mt-2 text-faint" style="font-size:0.9rem">{subtitle}</p>
+    )}
+    <div class="prose mt-8">
+      <slot />
+    </div>
+  </article>
+</Base>

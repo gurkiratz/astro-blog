@@ -28,6 +28,7 @@ export const LABEL_TONES: Record<string, LabelTone> = {
   Hackathon: "pink",
   Client: "green",
   Personal: "blue",
+  Winner: "green",
 };
 
 export function labelTone(label: string): LabelTone {
@@ -35,6 +36,17 @@ export function labelTone(label: string): LabelTone {
 }
 
 export const projects: Project[] = [
+  {
+    name: "Human on the Podium",
+    year: "2026",
+    labels: ["Hackathon", "New"],
+    description:
+      "How much of a political speech did a machine write? A live AI-speech detector built at Hack the North.",
+    links: [
+      { label: "case study", href: "/human-on-the-podium" },
+      { label: "live", href: "https://human-on-the-podium.vercel.app/" },
+    ],
+  },
   {
     name: "Global Sikhs NGO",
     year: "2026",
@@ -93,9 +105,19 @@ export const projects: Project[] = [
 
 export const hackathonProjects: Project[] = [
   {
+    name: "Human on the Podium",
+    year: "2026",
+    labels: ["New"],
+    description:
+      "How much of a political speech did a machine write? A live AI-speech detector built at Hack the North.",
+    links: [
+      { label: "case study", href: "/human-on-the-podium" },
+      { label: "live", href: "https://human-on-the-podium.vercel.app/" },
+    ],
+  },
+  {
     name: "Repo360",
     year: "2025",
-    labels: ["Hackathon"],
     description:
       "AI-powered repository analyzer that transforms overwhelming codebases into clear insights.",
     links: [
@@ -107,7 +129,6 @@ export const hackathonProjects: Project[] = [
   {
     name: "Marvin QA",
     year: "2025",
-    labels: ["Hackathon"],
     description:
       "Diagnose web scraper failures, analyze patterns, and provide actionable insights.",
     links: [
@@ -123,7 +144,6 @@ export const hackathonProjects: Project[] = [
   {
     name: "DeltaHealth",
     year: "2025",
-    labels: ["Hackathon"],
     description:
       "DeltaHealth AI evaluates your symptoms, assesses your condition, and offers guidance on next steps.",
     links: [
@@ -136,7 +156,7 @@ export const hackathonProjects: Project[] = [
   {
     name: "Roast My Wallet",
     year: "2025",
-    labels: ["Hackathon"],
+    labels: ["Winner"],
     description:
       "Generate roasts based on your crypto wallet balance. Winner $400 NEAR Agent Bounty Track.",
     links: [
@@ -146,21 +166,9 @@ export const hackathonProjects: Project[] = [
     ],
   },
   {
-    name: "We Broke The Ice",
-    year: "2024",
-    labels: ["Hackathon"],
-    description:
-      "Generate AI-powered icebreaker ideas with intuitive instructions. Winner Best UI @ GDSC Hacks 2024.",
-    links: [
-      { label: "live", href: "https://webroketheice.gurkiratz.co" },
-      { label: "source", href: "https://github.com/gurkiratz/webroketheice" },
-      { label: "devpost", href: "https://devpost.com/software/breaktheice" },
-    ],
-  },
-  {
     name: "Crowdfund",
     year: "2024",
-    labels: ["Hackathon"],
+    labels: ["Winner"],
     description:
       "A decentralized crowdfunding platform. Winner 4th place Starknet @ Hack Western 11.",
     links: [
@@ -173,6 +181,18 @@ export const hackathonProjects: Project[] = [
         label: "blog",
         href: "https://v2.gurkiratsingh.xyz/posts/how-i-built-a-crowdfunding-platform-solo-at-hackwestern",
       },
+    ],
+  },
+  {
+    name: "We Broke The Ice",
+    year: "2024",
+    labels: ["Winner"],
+    description:
+      "Generate AI-powered icebreaker ideas with intuitive instructions. Winner Best UI @ GDSC Hacks 2024.",
+    links: [
+      { label: "live", href: "https://webroketheice.gurkiratz.co" },
+      { label: "source", href: "https://github.com/gurkiratz/webroketheice" },
+      { label: "devpost", href: "https://devpost.com/software/breaktheice" },
     ],
   },
 ];
