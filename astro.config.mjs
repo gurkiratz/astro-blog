@@ -4,11 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import expressiveCode from "astro-expressive-code";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import rehypeFigcaption from "./src/lib/rehype-figcaption.mjs";
 
-// Set this to your real domain. It's used for canonical URLs and the RSS feed.
+// The live domain. Used for canonical URLs, the sitemap and the RSS feed.
+// Vercel redirects the apex to www, so www is the canonical host.
 export default defineConfig({
-  site: "https://gurkiratz.co",
+  site: "https://www.gurkiratsingh.xyz",
 
   markdown: {
     // Alt text on a standalone image becomes a visible caption underneath it.
@@ -67,5 +69,10 @@ export default defineConfig({
     mdx(),
     // The homepage ships a small timer island; /canvas ships the tldraw island.
     react(),
+    // Writes /sitemap-index.xml; robots.txt points search engines at it.
+    // The 404 page and the canvas toy have nothing worth indexing.
+    sitemap({
+      filter: (page) => !/\/(404|canvas)\/?$/.test(page),
+    }),
   ],
 });

@@ -28,6 +28,10 @@ export const site = {
   /** Shown big at the top + used in the <title> tag. */
   name: "Gurkirat Singh",
 
+  /** What you do. Goes in the homepage <title> and the structured data
+      search engines read, so it's what "gurkirat software engineer" matches. */
+  role: "Software Engineer",
+
   /** The little line under your name. */
   // tagline: 'developer · linux · neovim · writing things down',
   // tagline: "Master of pushing .DS_Store",
@@ -47,10 +51,15 @@ export const site = {
   marker: "",
 
   /** Your canonical URL. Keep in sync with `site` in astro.config.mjs. */
-  url: "https://gurkiratz.co",
+  url: "https://www.gurkiratsingh.xyz",
 
   /** Default meta description for pages that don't set their own. */
-  description: "Personal site - writing about code, work life, photos, music.",
+  description:
+    "Gurkirat Singh is a software engineer in Toronto, working at The IJF and studying computer science at Humber Polytechnic. Writing about code, projects, photos and music.",
+
+  /** Older sites of mine. Listed as `sameAs` in the structured data so
+      Google treats them as the same person as this site. */
+  previousSites: ["https://gurkiratz.github.io/", "https://gurkiratz.co/"],
 
   /** Top navigation. Add /projects, /uses, etc. as you build them (v2). */
   nav: [
