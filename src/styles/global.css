@@ -175,10 +175,6 @@ html.theme-easing
   position: absolute;
   left: -1.1em;
 }
-.prose a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 
 /* ── Label pills (tones assigned in src/data/projects.ts) ──────
    The background is derived from the text color, so each tone only
