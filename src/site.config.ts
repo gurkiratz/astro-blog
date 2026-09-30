@@ -17,6 +17,7 @@ export interface SocialItem {
 export const links = {
   github: "https://github.com/gurkiratz",
   linkedin: "https://www.linkedin.com/in/gurkiratz/",
+  bluesky: "https://bsky.app/profile/gurkirat.bsky.social",
   email: "mailto:gurkirat.singh@humber.ca",
   resume:
     "https://gurkiratz.github.io/resume-manager/resumes/Resume_Gurkirat_Singh.pdf",
@@ -55,12 +56,12 @@ export const site = {
   nav: [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
+    { label: "Projects", href: "/projects" },
+    { label: "Writing", href: "/writing" },
     {
       label: "Resume",
       href: "https://gurkiratz.github.io/resume-manager/resumes/Resume_Gurkirat_Singh.pdf",
     },
-    { label: "Projects", href: "/projects" },
-    { label: "Writing", href: "/writing" },
     // { label: "Now", href: "/now" },
     // { label: "Photography", href: "/photography" },
     // { label: "Uses", href: "/uses" },

@@ -1,4 +1,5 @@
 ---
+import { links } from '@/site.config';
 import Base from '../layouts/Base.astro';
 ---
 
@@ -17,10 +18,10 @@ import Base from '../layouts/Base.astro';
     </p>
     <h2>Elsewhere</h2>
     <ul>
-      <li>GitHub - <a href="https://github.com/gurkiratz">@gurkiratz</a></li>
-      <li>LinkedIn - <a href="https://www.linkedin.com/in/gurkiratz/">@gurkiratz</a></li>
-      <li>Bluesky - <a href="https://bsky.app/profile/gurkirat.bsky.social">gurkirat.bsky.social</a></li>
-      <li>Email - gurkirat dot singh at humber dot ca</li>
+      <li>GitHub - <a href={links.github}>github.com/gurkiratz</a></li>
+      <li>LinkedIn - <a href={links.linkedin}>linkedin.com/in/gurkiratz</a></li>
+      <li>Bluesky - <a href={links.bluesky}>@gurkirat.bsky.social</a></li>
+      <li>Email - <a href={links.email}>gurkirat.singh@humber.ca</a></li>
     </ul>
   </div>
 </Base>

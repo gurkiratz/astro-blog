@@ -1,5 +1,7 @@
 ---
+import { Bug, Code, Coffee } from '@lucide/astro';
 import Base from '../layouts/Base.astro';
+import Timer from '../components/Timer';
 import WritingPostList from '../components/WritingPostList.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
@@ -7,13 +9,37 @@ import { site } from '../site.config';
 const posts = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 5);
+
+const yearMs = 1000 * 60 * 60 * 24 * 365.25;
+const age = Math.floor((Date.now() - new Date('2003-07-27').getTime()) / yearMs);
+const yearsCoding = Math.floor(
+  (Date.now() - new Date('2022-07-27').getTime()) / yearMs,
+);
 ---
 
 <Base>
   <section>
+    <p>
+      I'm {age}. For the past {yearsCoding} years - or exactly <Timer
+        client:load
+        className="text-blue-300 in-data-[theme=light]:text-blue-500"
+      /> milliseconds - I've been turning coffee <Coffee
+        class="inline-block h-4 w-4 align-[-0.125em]"
+        size={16}
+        aria-hidden="true"
+      /> into code <Code
+        class="inline-block h-4 w-4 align-[-0.125em]"
+        size={16}
+        aria-hidden="true"
+      />, solving problems <Bug
+        class="inline-block h-4 w-4 align-[-0.125em]"
+        size={16}
+        aria-hidden="true"
+      />, and having fun breaking (and fixing) things!
+    </p>
 
-    <ul class="space-y-4">
-      <li>I build software to solve my own problems, like this <a href="https://kirtansewa-player.vercel.app/">personal music player</a>.</li>
+    <ul class="mt-4 space-y-4">
+      <li>I build <a href="/projects">software</a> to solve my own problems, and attend <a href="/hackathons">hackathons</a> to solve other people's problems.</li>
       <li>Say hi on <a href={site.github}>GitHub</a>, <a href={site.linkedin}>LinkedIn</a>, or <a href={site.email}>Email</a> if you want to talk.</li>
     </ul>
   </section>
