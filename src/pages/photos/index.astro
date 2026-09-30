@@ -1,0 +1,154 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import PhotoFolders, { type FolderTile } from '../../components/PhotoFolders';
+
+// Newest album first — the same order the folders would sort by date in
+// Finder, and the order that puts a fresh shoot at the top left.
+const albums: FolderTile[] = (await getCollection('albums'))
+  .sort((a, b) => b.data.updated.valueOf() - a.data.updated.valueOf())
+  .map(({ data }) => ({
+    slug: data.slug,
+    name: data.name,
+    count: data.photos.length,
+  }));
+---
+
+<Base
+  title="Photos"
+  description="Photos I've taken over the years"
+  wide
+>
+  <h1 class="text-ink font-medium" style="font-size:1.1rem">
+    <span class="text-faint" data-marker></span> Photos
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    The moments I've captured over the years.
+  </p>
+
+  {
+    albums.length > 0 ? (
+      <div class="mt-8">
+        <PhotoFolders albums={albums} client:load />
+      </div>
+    ) : (
+      <p class="mt-8 text-faint" style="font-size:0.9rem">
+        No albums yet — or Cloudinary isn't configured for this build.
+      </p>
+    )
+  }
+</Base>
+
+<style is:global>
+  .photo-desktop-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .photo-desktop-hint {
+    margin: 0;
+    color: var(--color-faint);
+    font-size: 0.78rem;
+  }
+  .photo-desktop-reset {
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 5px;
+    background: var(--color-surface);
+    color: var(--color-muted);
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+  }
+  .photo-desktop-reset:hover:not(:disabled) {
+    color: var(--color-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+  .photo-desktop-reset:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+
+  .photo-desktop-surface {
+    position: relative;
+    margin-top: 1rem;
+    /* Before the island measures itself the tiles are still in flow, so the
+       server-rendered page and the first client paint agree. */
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .photo-desktop-surface[data-positioned] {
+    display: block;
+  }
+
+  .photo-folder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    width: 132px;
+    padding: 0.5rem 0.25rem 0.6rem;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-ink);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    /* The tile owns every gesture that starts on it, so a drag never turns
+       into a page scroll halfway through. */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .photo-desktop-surface[data-positioned] .photo-folder {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .photo-folder:hover {
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+  }
+  .photo-folder:hover .photo-folder-icon {
+    transform: translateY(-2px);
+  }
+  .photo-folder:active .photo-folder-icon {
+    opacity: 0.7;
+  }
+
+  .photo-folder-icon {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.28));
+    /* Without this a drag that starts on the image picks the image up
+       instead of the tile. */
+    pointer-events: none;
+    transition: opacity 0.12s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .photo-folder-name {
+    padding: 0.05rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    /* Long folder names wrap to two lines and then clip, exactly as an icon
+       label does — the full name is on the button's aria-label. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-folder-icon,
+    .photo-folder:hover .photo-folder-icon {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

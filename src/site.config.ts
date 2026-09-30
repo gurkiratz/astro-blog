@@ -61,6 +61,7 @@ export const site = {
     },
     { label: "Projects", href: "/projects" },
     { label: "Writing", href: "/writing" },
+    { label: "Photos", href: "/photos" },
     // { label: "Now", href: "/now" },
     // { label: "Photography", href: "/photography" },
     // { label: "Uses", href: "/uses" },

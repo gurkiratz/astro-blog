@@ -1,0 +1,105 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import PhotoGallery from '../../components/PhotoGallery';
+
+// One route per Cloudinary folder. The slug is the folder name slugified in
+// src/lib/cloudinary.ts, so "day in the office" -> /photos/day-in-the-office/.
+export async function getStaticPaths() {
+  const albums = await getCollection('albums');
+  return albums.map((album) => ({
+    params: { album: album.data.slug },
+    props: { album: album.data },
+  }));
+}
+
+const { album } = Astro.props;
+const count = album.photos.length;
+---
+
+<Base
+  title={album.name}
+  description={`${count} ${count === 1 ? 'photograph' : 'photographs'} — ${album.name}.`}
+  wide
+>
+  <p style="font-size:0.8rem">
+    <a href="/photos/" class="text-faint">← Photos</a>
+  </p>
+
+  <h1 class="mt-3 text-ink font-medium" style="font-size:1.1rem">
+    <span class="text-faint" data-marker></span>
+    {album.name}
+  </h1>
+  <p class="mt-2 text-muted" style="font-size:0.9rem">
+    {count} {count === 1 ? 'photograph' : 'photographs'} · click one to preview
+  </p>
+
+  <div class="mt-8">
+    <PhotoGallery photos={album.photos} client:load />
+  </div>
+</Base>
+
+<style is:global>
+  /* Each photo sits on a white mat with a soft drop shadow — the print-on-a-
+     table look Finder and Preview use, which also keeps a dark photo from
+     bleeding into the site's dark background. The album's `padding` prop is
+     what opens up the mat; this paints it.
+
+     Note both class names land on the SAME element — the album renders one
+     <button class="react-photo-album--photo react-photo-album--button">, so a
+     rule written against `--button` will override one written against
+     `--photo`. Everything visual is set here, in one place, to keep that from
+     biting. */
+  .photo-gallery .react-photo-album--photo {
+    background: #fff;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px rgb(0 0 0 / 0.18);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+
+  /* On hover a print tilts slightly, as if nudged on the table — alternate
+     photos in a row lean opposite ways so the row doesn't all swing
+     together. Held for as long as the cursor stays, eased in and out.
+     Hover-capable pointers only (on touch, :hover sticks after a tap), and
+     not at all under reduced motion. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .photo-gallery .react-photo-album--photo:hover {
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.32), 0 14px 28px rgb(0 0 0 / 0.22);
+    }
+    .photo-gallery .react-photo-album--photo:nth-child(odd):hover {
+      transform: rotate(-1.5deg);
+    }
+    .photo-gallery .react-photo-album--photo:nth-child(even):hover {
+      transform: rotate(1.5deg);
+    }
+  }
+  .photo-gallery .react-photo-album--photo:active {
+    transform: scale(0.99);
+    transition-duration: 0.08s;
+  }
+
+  .photo-gallery .react-photo-album--image {
+    border-radius: 1px;
+  }
+
+  /* The lightbox floats above the site, so it opts out of the page palette
+     and stays neutral — the photo is the only color in the frame. */
+  .yarl__slide_image {
+    box-shadow: 0 10px 40px rgb(0 0 0 / 0.5);
+  }
+  .yarl__counter {
+    color: rgb(255 255 255 / 0.65);
+    font-size: 0.78rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-gallery .react-photo-album--photo,
+    .photo-gallery .react-photo-album--photo:active {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

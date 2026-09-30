@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { cloudinaryAlbums } from './lib/cloudinary';
 
 // An optional string that tolerates a blank frontmatter key. In YAML an empty
 // `description:` line parses as null, which a plain z.string().optional() would
@@ -42,4 +43,10 @@ const photos = defineCollection({
     }),
 });
 
-export const collections = { writing, photos };
+// The /photos albums, one per Cloudinary folder under gurkirat-website/
+// photography. Unlike the two collections above there are no files to edit:
+// upload to a folder in Cloudinary and the album appears on the next build.
+// Schema and fetching both live in src/lib/cloudinary.ts.
+const albums = defineCollection({ loader: cloudinaryAlbums() });
+
+export const collections = { writing, photos, albums };

@@ -16,6 +16,10 @@ export default defineConfig({
     rehypePlugins: [rehypeFigcaption],
   },
 
+  // Honour PORT so a second checkout (a git worktree, say) can run its own
+  // dev server without colliding with 4321.
+  server: { port: Number(process.env.PORT) || 4321 },
+
   vite: {
     plugins: [tailwindcss()],
     resolve: {
