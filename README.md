@@ -95,6 +95,19 @@ in tldraw's read-only mode: pan, zoom, select, no edits.
 The form answers the same way for every address, so it can't be used to find
 out who may edit your canvas. Real failures are logged to the console.
 
+### tldraw license
+
+`PUBLIC_TLDRAW_LICENSE_KEY` is **required on a real domain**. Without it tldraw
+resolves to `unlicensed-production` and replaces the editor with a hidden
+placeholder after exactly 5 seconds (`LICENSE_TIMEOUT` in
+`@tldraw/editor/lib/license/LicenseProvider`). The canvas looks like it loads
+and then disappears; the stored document is never touched.
+
+The trap is that tldraw counts plain `http:` and loopback hosts as
+development, where the same missing key only produces a watermark. So this
+cannot reproduce on localhost — it appears for the first time on deploy.
+Get a key from https://tldraw.dev.
+
 ### setup
 
 1. Copy `.env.example` to `.env` and fill in `PUBLIC_SUPABASE_ANON_KEY`
@@ -105,9 +118,10 @@ out who may edit your canvas. Real failures are logged to the console.
    to your domain and add `http://localhost:4321/canvas?edit` and
    `https://<your-domain>/canvas?edit` to the redirect allowlist, or the
    magic link will bounce.
-3. Set the same two `PUBLIC_*` vars in the Cloudflare Pages build settings —
+3. Set all three `PUBLIC_*` vars in the Cloudflare Pages build settings —
    they're read at build time, so a deploy without them ships a canvas that
-   can't reach the database.
+   can't reach the database (or, without the tldraw key, one that disappears
+   after 5 seconds).
 
 ## deploy (Cloudflare Pages)
 

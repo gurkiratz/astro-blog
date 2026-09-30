@@ -1,0 +1,127 @@
+---
+layout: ../layouts/CaseStudy.astro
+title: Human on the Podium
+subtitle: Hack the North 2026
+description: How much of a political speech did a machine write? A live AI-speech detector, built at Hack the North 2026.
+---
+
+import Media from "@/components/podium/Media.astro";
+import SentenceExplorer from "@/components/podium/SentenceExplorer.astro";
+import ShareHistogram from "@/components/podium/ShareHistogram.astro";
+
+**How much of a political speech did a machine write?** That was the question we
+spent Hack the North on. [Try the live tool](https://human-on-the-podium.vercel.app/).
+
+<Media
+  alt="Hero: the Live detector's sentence heatmap, next to the hardware badge"
+  src="/human-on-the-podium/hero.png"
+  caption="The Live detector colouring each sentence as it's spoken."
+/>
+
+## The idea
+
+Politicians can use AI to write speeches and official documents, and nobody has
+to say so. We wanted a tool that tells you roughly how much of a text a machine
+wrote, as a single number like "28% AI", instead of a flat HUMAN or AI label.
+Most writing is a mix, and one label hides that.
+
+## Making our own data
+
+The plan was to test on real speeches. Problem: nearly all of them were written
+by people, so there was nothing to test against. So we made a dataset where we
+knew exactly how much AI was in each record.
+
+We took 200 public appointment records from the
+[Investigative Journalism Foundation](https://theijf.org/appointments): 100
+Manitoba Orders in Council and 100 federal Privy Council appointments (half
+French). A Python pipeline sent each one to GPT-4 with a target for how much to
+rewrite, measured the result, and retried until it hit the target.
+
+| Set        | Records | What we did     | Text kept |
+| ---------- | ------- | --------------- | --------- |
+| Provincial | 40%     | Full AI rewrite | 24%       |
+| Provincial | 40%     | Light edit      | 97%       |
+| Provincial | 20%     | Left alone      | 100%      |
+| Federal    | 60%     | Moderate edit   | 82%       |
+| Federal    | 40%     | Deeper rewrite  | 64%       |
+
+The fiddly part was keeping every name, date, dollar amount and legal citation
+intact. Legal text is full of full stops that don't end sentences (`c. P271`,
+`$4,404.38`), and 19 records didn't follow the usual layout, so the pipeline
+detects the language of each line instead of trusting fixed phrases. In the end
+it ran all 200 with zero failures, about 40 seconds per 100.
+
+## What we built
+
+- **Live detector.** Speak into the mic and it transcribes you, then colours each
+  sentence by how AI it reads, every 80 words or 2.5 second pause.
+- **Hacker badge.** Joshua got the Hack the North badge running and wrote a
+  small API for it in Lua, so our Next.js app can hit it directly and change
+  what the badge shows. It sits on the same WiFi and flashes red when a section
+  is 50%+ AI, green when it isn't.
+- **Analyze.** Paste a YouTube or [CPAC](https://www.cpac.ca/search) link with a timestamp and it scores 60
+  seconds of audio.
+- **Database and Map.** All 205 records, searchable, and plotted in 2D/3D by
+  meaning so you can spot near-identical text that scored very differently.
+
+<Media
+  src="https://www.youtube.com/embed/g2LEuestWKY"
+  alt="Human on the Podium demo"
+  caption="A quick demo of the Live detector."
+/>
+
+<Media
+  src="/human-on-the-podium/database.png"
+  alt="Database screenshot"
+  caption="The Database: all 205 records, searchable and sortable."
+/>
+
+## Tech Stack
+
+Built with [GPTZero](https://gptzero.me/) for AI detection, [ElevenLabs](https://elevenlabs.io/) Scribe for live transcription,
+Elasticsearch kNN with Jina embeddings for the map, Next.js, SQLite and yt-dlp + ffmpeg for videos.
+
+## What we found
+
+Across the 200 rewritten records, the average AI share was 35%. 81 records
+scored 50% or more, and 74 scored under 10%.
+
+<ShareHistogram />
+
+The federal records, which all got edited, mostly land around 60–70%. The
+provincial ones pile up near zero, even though 40 of them were full rewrites.
+Only about 20 provincial records scored above 50%. **That gap is on us: some of
+the rewritten data got missed during processing, so not every full rewrite made
+it into the scored set.**
+
+The five real speeches we tried (Stephen Harper, Evan Solomon, the EU State of
+the Union, and a couple of others) all read as human sentence by sentence,
+between 0% and 8%.
+
+## The Bill Oliver clip
+
+One of those real clips is a [New Brunswick MLA](https://www.youtube.com/watch?v=kaJgX_FIcsw) who read a chatbot's reply out
+loud in the legislature, preamble and all. Score it as one block and you get
+28% AI. Score it sentence by sentence and average, and it drops to 8%. The line
+that literally is the chatbot talking? 6%.
+
+<SentenceExplorer />
+
+## What we learned
+
+AI detectors aren't great with speech. Short clips don't give them enough to go
+on, so they often miss AI text, which means a "human" result on a short clip
+doesn't prove much. And the same text can score very differently depending on
+how you feed it in, like the Bill Oliver clip above. So we'd treat a detector
+score as a hint, not a verdict.
+
+## How it went
+
+We didn't win, but I had a great time talking through the idea with [Alex (Co-founder of GPTZero)](https://www.linkedin.com/in/alex-cui-caltech/) and
+the other mentors, and got some really useful feedback. The hacker badge also
+made our demo so much better. Watching it flash red while someone read out a
+speech got a much bigger reaction than any screen could :)
+
+## Try it
+
+[Live tool](https://human-on-the-podium.vercel.app/) • [Devpost](https://devpost.com/software/politislop) • [Source](https://github.com/gurkiratz/human-on-the-podium)

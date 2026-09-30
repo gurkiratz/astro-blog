@@ -65,8 +65,7 @@ export default defineConfig({
       },
     }),
     mdx(),
-    // Only /canvas ships React (the tldraw island); every other page stays
-    // zero-JS, so the integration costs nothing elsewhere.
+    // The homepage ships a small timer island; /canvas ships the tldraw island.
     react(),
   ],
 });

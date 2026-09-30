@@ -1,0 +1,53 @@
+---
+// A captioned photo or video for case-study pages. Files live in
+// public/human-on-the-podium/; `src` can also be a YouTube embed URL. With no `src` yet, it renders a dashed
+// placeholder so the layout shows where the media will go.
+interface Props {
+  src?: string;
+  alt: string;
+  caption?: string;
+  /** Poster frame for videos. */
+  poster?: string;
+}
+
+const { src, alt, caption, poster } = Astro.props;
+const isVideo = src ? /\.(mp4|webm|mov)$/i.test(src) : false;
+const isYouTube = src ? /youtube\.com\/embed\//.test(src) : false;
+---
+
+<figure>
+  {
+    !src ? (
+      <div
+        class="flex aspect-video items-center justify-center rounded-lg border border-dashed border-rule px-6 text-center text-faint"
+        style="font-size:0.85rem"
+      >
+        {alt}
+      </div>
+    ) : isYouTube ? (
+      <iframe
+        src={src}
+        title={alt}
+        class="aspect-video w-full rounded-lg"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      />
+    ) : isVideo ? (
+      <video
+        src={src}
+        poster={poster}
+        class="w-full rounded-lg"
+        autoplay
+        muted
+        loop
+        playsinline
+        aria-label={alt}
+      />
+    ) : (
+      <img src={src} alt={alt} class="w-full rounded-lg" loading="lazy" />
+    )
+  }
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
