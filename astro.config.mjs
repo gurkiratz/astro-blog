@@ -22,6 +22,11 @@ export default defineConfig({
   // dev server without colliding with 4321.
   server: { port: Number(process.env.PORT) || 4321 },
 
+  // The old local-photo gallery lived at /photography
+  redirects: {
+    "/photography": "/photos",
+  },
+
   vite: {
     plugins: [tailwindcss()],
     resolve: {

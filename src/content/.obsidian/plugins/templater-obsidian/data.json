@@ -17,10 +17,6 @@
     {
       "folder": "writing",
       "template": "_templates/blog.md"
-    },
-    {
-      "folder": "photos",
-      "template": "_templates/photo.md"
     }
   ],
   "enable_file_templates": false,

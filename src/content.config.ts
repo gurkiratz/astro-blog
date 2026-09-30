@@ -1,6 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
-import { cloudinaryAlbums } from './lib/cloudinary';
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+import { cloudinaryAlbums } from "./lib/cloudinary";
 
 // An optional string that tolerates a blank frontmatter key. In YAML an empty
 // `description:` line parses as null, which a plain z.string().optional() would
@@ -14,7 +14,7 @@ const optionalString = z
 // The /writing collection. Drop a .md file in src/content/writing/ and it
 // shows up automatically. Frontmatter is type-checked against this schema.
 const writing = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/writing' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/writing" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -23,31 +23,7 @@ const writing = defineCollection({
     draft: z.boolean().default(false),
   }),
 });
-
-// The /photography collection. One folder per photo:
-//   src/content/photos/<slug>/index.md   (notes + metadata)
-//   src/content/photos/<slug>/photo.jpg  (the image, optimized at build)
-// SHORT note = `caption` (optional). LONG note = the markdown body (optional).
-const photos = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/photos' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      date: z.coerce.date(),
-      image: image(),
-      alt: z.string(),
-      caption: optionalString,
-      location: optionalString,
-      tags: z.array(z.string()).default([]),
-      draft: z.boolean().default(false),
-    }),
-});
-
-// The /photos albums, one per Cloudinary folder under gurkirat-website/
-// photography. Unlike the two collections above there are no files to edit:
-// upload to a folder in Cloudinary and the album appears on the next build
-// (git push, or the daily Vercel rebuild in .github/workflows/daily-rebuild.yml).
-// Schema and fetching both live in src/lib/cloudinary.ts.
+// The /photos album
 const albums = defineCollection({ loader: cloudinaryAlbums() });
 
-export const collections = { writing, photos, albums };
+export const collections = { writing, albums };

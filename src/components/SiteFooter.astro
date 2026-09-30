@@ -3,13 +3,14 @@ import { getCollection } from 'astro:content';
 import { site } from '../site.config';
 import FooterDoodle from './FooterDoodle.astro';
 
-const [posts, photos] = await Promise.all([
+const [posts, albums] = await Promise.all([
   getCollection('writing', ({ data }) => !data.draft),
-  getCollection('photos', ({ data }) => !data.draft),
+  getCollection('albums'),
 ]);
-const latestDate = [...posts, ...photos]
-  .map((entry) => entry.data.date)
-  .sort((a, b) => b.valueOf() - a.valueOf())[0];
+const latestDate = [
+  ...posts.map((entry) => entry.data.date),
+  ...albums.map((entry) => entry.data.updated),
+].sort((a, b) => b.valueOf() - a.valueOf())[0];
 const updatedLabel = latestDate
   ? latestDate.toLocaleDateString('en-GB', {
       day: 'numeric',

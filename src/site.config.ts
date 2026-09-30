@@ -72,9 +72,6 @@ export const site = {
       label: "Resume",
       href: "https://gurkiratz.github.io/resume-manager/resumes/Resume_Gurkirat_Singh.pdf",
     },
-    // { label: "Now", href: "/now" },
-    // { label: "Photography", href: "/photography" },
-    // { label: "Uses", href: "/uses" },
     { label: "Slashpages", href: "/slashpages" },
   ] satisfies NavItem[],
 

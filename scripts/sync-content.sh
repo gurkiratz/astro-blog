@@ -21,6 +21,7 @@ fi
 rsync -a --delete \
   --exclude ".DS_Store" \
   --exclude "_templates/" \
+  --exclude "photos/" \
   --exclude ".obsidian/workspace.json" \
   --exclude ".obsidian/workspace-mobile.json" \
   --exclude ".obsidian/app.json" \
