@@ -118,20 +118,22 @@ Get a key from https://tldraw.dev.
    to your domain and add `http://localhost:4321/canvas?edit` and
    `https://<your-domain>/canvas?edit` to the redirect allowlist, or the
    magic link will bounce.
-3. Set all three `PUBLIC_*` vars in the Cloudflare Pages build settings —
+3. Set all three `PUBLIC_*` vars in the Vercel project environment —
    they're read at build time, so a deploy without them ships a canvas that
    can't reach the database (or, without the tldraw key, one that disappears
    after 5 seconds).
 
-## deploy (Cloudflare Pages)
+## daily rebuild
 
-Connect the repo in the Cloudflare dashboard, or use Wrangler:
+`/photos` lists Cloudinary at **build time**, so a new upload is invisible
+until the next deploy. Git push still deploys as usual; a scheduled GitHub
+Action also rebuilds production every day at 08:00 Eastern (EDT) so albums
+catch up without a commit.
 
-- Build command: `npm run build`
-- Build output directory: `dist`
-
-Set the real domain in `astro.config.mjs` (`site:`) and `src/site.config.ts`
-(`url:`) before launch — it's used for canonical URLs and the RSS feed.
+`.github/workflows/daily-rebuild.yml` POSTs a [Vercel Deploy Hook](https://vercel.com/docs/deploy-hooks).
+Create the hook (Vercel → Settings → Git → Deploy Hooks, branch `master`)
+and store the URL as the GitHub Actions secret `VERCEL_DEPLOY_HOOK`. The
+workflow also has **Run workflow** for a manual rebuild.
 
 ## roadmap (v2+)
 

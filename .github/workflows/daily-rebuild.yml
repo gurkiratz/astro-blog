@@ -1,0 +1,36 @@
+# Rebuild production once a day so /photos picks up Cloudinary uploads
+# without a commit. Vercel already builds on git push; this only hits a
+# Deploy Hook for the same branch.
+#
+# One-time setup:
+#   1. Vercel → Project → Settings → Git → Deploy Hooks
+#      Name: daily-rebuild  Branch: master
+#   2. GitHub → Settings → Secrets and variables → Actions
+#      Name: VERCEL_DEPLOY_HOOK  Value: the hook URL
+#
+# Treat that URL like a password. Anyone who has it can trigger a deploy.
+name: Daily rebuild
+
+on:
+  schedule:
+    # 08:00 Eastern during EDT (12:00 UTC).
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK" ]; then
+            echo "Missing GitHub secret VERCEL_DEPLOY_HOOK." >&2
+            echo "Create a Deploy Hook in Vercel (Settings → Git → Deploy Hooks)" >&2
+            echo "for the master branch, then store its URL as that secret." >&2
+            exit 1
+          fi
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK"

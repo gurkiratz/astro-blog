@@ -45,7 +45,8 @@ const photos = defineCollection({
 
 // The /photos albums, one per Cloudinary folder under gurkirat-website/
 // photography. Unlike the two collections above there are no files to edit:
-// upload to a folder in Cloudinary and the album appears on the next build.
+// upload to a folder in Cloudinary and the album appears on the next build
+// (git push, or the daily Vercel rebuild in .github/workflows/daily-rebuild.yml).
 // Schema and fetching both live in src/lib/cloudinary.ts.
 const albums = defineCollection({ loader: cloudinaryAlbums() });
 

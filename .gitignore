@@ -14,8 +14,8 @@ pnpm-debug.log*
 .env.production
 # macOS
 .DS_Store
-# cloudflare / deploy
-.wrangler/
+
+# Vercel
 .vercel/
 # Obsidian local editor state (keep plugins/settings tracked)
 **/.obsidian/workspace.json
