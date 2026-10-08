@@ -1,0 +1,102 @@
+---
+// Fixed bar that slides up from the bottom of a writing post, showing the
+// destination of the prose link under the cursor (protocol stripped).
+---
+
+<div class="link-status" data-link-status aria-hidden="true"></div>
+
+<script>
+  let abort: AbortController | undefined;
+
+  function prettyHref(anchor: HTMLAnchorElement): string {
+    const href = anchor.getAttribute('href') ?? '';
+    if (href.startsWith('mailto:')) return href.slice('mailto:'.length);
+    if (href.startsWith('#')) return href;
+    try {
+      const url = new URL(anchor.href);
+      if (url.origin === location.origin) {
+        return `${url.pathname}${url.search}${url.hash}`;
+      }
+      return url.href.replace(/^https?:\/\//, '');
+    } catch {
+      return href.replace(/^https?:\/\//, '');
+    }
+  }
+
+  function bind() {
+    abort?.abort();
+    abort = new AbortController();
+    const { signal } = abort;
+
+    const prose = document.querySelector<HTMLElement>('.prose');
+    const bar = document.querySelector<HTMLElement>('[data-link-status]');
+    // The bar starts inside <main>, which uses a transform for the page-enter
+    // animation — that makes position:fixed stick to the article instead of
+    // the viewport. Park it on body so it can slide up over the screen.
+    if (!prose || !bar) {
+      document.querySelectorAll('[data-link-status]').forEach((el) => el.remove());
+      return;
+    }
+    document.body.appendChild(bar);
+
+    const show = (anchor: HTMLAnchorElement) => {
+      bar.textContent = `→ ${prettyHref(anchor)}`;
+      bar.classList.add('is-visible');
+    };
+    const hide = () => {
+      bar.classList.remove('is-visible');
+    };
+
+    const linkFrom = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return null;
+      const anchor = target.closest('a[href]');
+      return anchor instanceof HTMLAnchorElement && prose.contains(anchor)
+        ? anchor
+        : null;
+    };
+
+    prose.addEventListener(
+      'pointerover',
+      (event) => {
+        const anchor = linkFrom(event.target);
+        if (anchor) show(anchor);
+      },
+      { signal },
+    );
+    prose.addEventListener(
+      'pointerout',
+      (event) => {
+        const leaving = linkFrom(event.target);
+        if (!leaving) return;
+        const next = linkFrom(event.relatedTarget);
+        if (next !== leaving) {
+          if (next) show(next);
+          else hide();
+        }
+      },
+      { signal },
+    );
+    prose.addEventListener(
+      'focusin',
+      (event) => {
+        const anchor = linkFrom(event.target);
+        if (anchor) show(anchor);
+      },
+      { signal },
+    );
+    prose.addEventListener(
+      'focusout',
+      (event) => {
+        if (!linkFrom(event.relatedTarget)) hide();
+      },
+      { signal },
+    );
+  }
+
+  bind();
+  document.addEventListener('astro:page-load', bind);
+  document.addEventListener('astro:before-swap', () => {
+    abort?.abort();
+    document.querySelectorAll('[data-link-status]').forEach((el) => el.remove());
+  });
+</script>

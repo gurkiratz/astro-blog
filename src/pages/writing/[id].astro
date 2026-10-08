@@ -1,5 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
+import LinkStatusBar from '../../components/LinkStatusBar.astro';
+import ProseLightbox from '../../components/ProseLightbox.tsx';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -39,5 +41,7 @@ const longDate = (d: Date) =>
     <div class="prose mt-8">
       <Content />
     </div>
+    <ProseLightbox client:idle />
+    <LinkStatusBar />
   </article>
 </Base>

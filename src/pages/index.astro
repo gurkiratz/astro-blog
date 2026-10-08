@@ -5,6 +5,7 @@ import Timer from '../components/Timer';
 import WritingPostList from '../components/WritingPostList.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
+import Elsewhere from '@/components/Elsewhere.astro';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -18,11 +19,13 @@ const yearsCoding = Math.floor(
 ---
 
 <Base>
-  <section>
+  <section class="intro">
     <p>
-      I'm {age}. For the past {yearsCoding} years - or exactly <Timer
+      Hi, I'm Gurkirat! 
+    </p> 
+    <p class="mt-4"> I'm {age} . For the past {yearsCoding} years - or exactly <Timer
         client:load
-        className="text-blue-300 in-data-[theme=light]:text-blue-500"
+        className="text-emerald-300 opacity-85 in-data-[theme=light]:text-teal-700"
       /> milliseconds - I've been turning coffee <Coffee
         class="inline-block h-4 w-4 align-[-0.125em]"
         size={16}
@@ -39,9 +42,12 @@ const yearsCoding = Math.floor(
     </p>
 
     <ul class="mt-4 space-y-4">
-      <li>I build <a href="/projects">software</a> to solve my own problems, and attend <a href="/hackathons">hackathons</a> to solve other people's problems.</li>
-      <li>Say hi on <a href={site.github}>GitHub</a>, <a href={site.linkedin}>LinkedIn</a>, or <a href={site.email}>Email</a> if you want to talk.</li>
-    </ul>
+      <li>I build <a href="/projects">software</a> to solve my own problems, and participate in <a href="/hackathons">hackathons</a> to solve other people's problems.</li>
+      <!-- <li>Say hi on <a href={site.github}>GitHub</a>, <a href={site.linkedin}>LinkedIn</a>, or <a href={site.email}>Email</a> if you want to talk.</li>-->
+      </ul> 
+      <div class=" mt-4">
+        <Elsewhere />
+      </div>
   </section>
 
   <section class="mt-10">

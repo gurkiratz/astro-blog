@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
 
+@font-face {
+  font-family: "PolySans Italic";
+  src: url("/fonts/PolySans-NeutralItalic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* ── Design tokens ────────────────────────────────────────────
    These become Tailwind utilities automatically:
    --color-accent -> text-accent / bg-accent / border-accent, etc.
@@ -12,6 +20,8 @@
   --color-muted: #8b8576;
   --color-faint: #6c685c;
   --color-accent: #f7c29c;
+  --color-link: #e08a94;
+  --color-link-hover: #5091d4;
   --color-rule: #2a2620;
   --color-tag-teal: #7fd1b9;
   --color-tag-amber: #e6a96b;
@@ -32,7 +42,7 @@
   body {
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 450;
     line-height: 1.65;
     letter-spacing: -0.011em;
@@ -137,6 +147,63 @@ html.theme-easing
    comfortable measure and rhythm. Tweak freely.                 */
 .prose {
   color: var(--color-ink);
+}
+/* In-prose (and homepage intro) links: wine-red; hover warms the color. */
+.prose a,
+.intro a {
+  color: var(--color-link);
+  text-decoration: none;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 0.25s ease, text-decoration-color 0.15s ease,
+    opacity 0.25s ease;
+}
+@media (hover: hover) {
+  .prose a:hover,
+  .intro a:hover {
+    color: var(--color-link-hover);
+    /* text-decoration-color: var(--color-muted); */
+  }
+}
+.prose a:has(img) {
+  text-decoration: none;
+}
+
+/* Writing-post status bar: destination URL slides up from the bottom. */
+.link-status {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  pointer-events: none;
+  padding: 0.4rem 1.25rem;
+  font-size: 0.78rem;
+  letter-spacing: -0.011em;
+  color: var(--color-link-hover);
+  background: color-mix(in srgb, var(--color-ink) 16%, var(--color-base));
+  opacity: 0.6;
+  border-top: 1px solid var(--color-rule);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+}
+.link-status.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .link-status {
+    transition: opacity 0.15s ease;
+    transform: none;
+  }
+  .link-status:not(.is-visible) {
+    opacity: 0;
+  }
 }
 .prose > * + * {
   margin-top: 1.1em;
@@ -301,10 +368,15 @@ html.theme-easing
   text-align: left;
 }
 
+.prose img[data-lightbox] {
+  cursor: zoom-in;
+}
+
 .prose figcaption {
   margin-top: 0.5em;
-  font-size: 0.95em;
-  color: var(--color-faint);
+  font-family: "PolySans Italic", var(--font-sans);
+  font-style: italic;
+  font-size: 0.85em;
 }
 .prose table {
   width: 100%;

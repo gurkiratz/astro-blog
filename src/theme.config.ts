@@ -14,6 +14,7 @@ export type PaletteKey =
   | "muted"
   | "faint"
   | "rule"
+  | "link"
   | "tag-teal"
   | "tag-amber"
   | "tag-pink"
@@ -70,6 +71,7 @@ export const PALETTE_KEYS: PaletteKey[] = [
   "muted",
   "faint",
   "rule",
+  "link",
   "tag-teal",
   "tag-amber",
   "tag-pink",
@@ -87,12 +89,13 @@ export const themes: ThemeEntry[] = [
     color: "#ffffff",
     opacity: 100,
     palette: {
-      base: "#101010",
+      base: "#262A2A",
       surface: "#1a1a1a",
       ink: "#ececec",
       muted: "#9a9a9a",
       faint: "#6e6e6e",
       rule: "#262626",
+      link: "#e08a94",
       selection: "#F7CF7B",
     },
   },
@@ -108,6 +111,7 @@ export const themes: ThemeEntry[] = [
       muted: "#6f6b63",
       faint: "#a3a099",
       rule: "#e2d8c4",
+      link: "#9c3d4a",
       // Darker tag/inline-code colors so they stay readable on light.
       "tag-teal": "#0f766e",
       "tag-amber": "#b45309",
