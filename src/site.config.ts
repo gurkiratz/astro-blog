@@ -17,7 +17,7 @@ export interface SocialItem {
 export const links = {
   github: "https://github.com/gurkiratz",
   linkedin: "https://www.linkedin.com/in/gurkiratz/",
-  bluesky: "https://bsky.app/profile/gurkiratz.co",
+  bluesky: "https://bsky.app/profile/gurkirat.bsky.social",
   x: "https://x.com/theGurSingh",
   email: "mailto:gurkirat.singh@humber.ca",
   resume:
