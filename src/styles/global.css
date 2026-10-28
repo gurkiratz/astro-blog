@@ -182,9 +182,12 @@ html.theme-easing
   font-size: 0.78rem;
   letter-spacing: -0.011em;
   color: var(--color-link-hover);
-  background: color-mix(in srgb, var(--color-ink) 16%, var(--color-base));
+  background: color-mix(in srgb, var(--color-base) 72%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   opacity: 0.6;
   border-top: 1px solid var(--color-rule);
+  text-align: right;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

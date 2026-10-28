@@ -15,5 +15,5 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
   <p class="mt-2 text-muted" style="font-size:0.9rem">
     Things I've written down. <a href="/rss.xml">RSS →</a>
   </p>
-  <WritingPostList posts={posts} groupByYear />
+  <WritingPostList posts={posts} groupByYear showTags />
 </Base>

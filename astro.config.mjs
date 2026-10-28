@@ -6,6 +6,7 @@ import expressiveCode from "astro-expressive-code";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import rehypeFigcaption from "./src/lib/rehype-figcaption.mjs";
+import rehypeExternalLinks from "./src/lib/rehype-external-links.mjs";
 
 // The live domain. Used for canonical URLs, the sitemap and the RSS feed.
 // Vercel redirects the apex to www, so www is the canonical host.
@@ -15,7 +16,7 @@ export default defineConfig({
   markdown: {
     // Alt text on a standalone image becomes a visible caption underneath it.
     // See src/lib/rehype-figcaption.mjs.
-    rehypePlugins: [rehypeFigcaption],
+    rehypePlugins: [rehypeFigcaption, rehypeExternalLinks],
   },
 
   // Honour PORT so a second checkout (a git worktree, say) can run its own
