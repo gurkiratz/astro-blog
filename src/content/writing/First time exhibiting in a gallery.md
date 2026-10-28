@@ -7,6 +7,8 @@ tags:
 description:
 draft: false
 ---
+![](../assets/df627bf7-d3c6-4144-9ca5-6d29f075b97b.jpg)
+
 This summer I joined photography classes with JAYU for eight weeks. I literally got into the program just one day before it started, so thanks to [Des](https://www.linkedin.com/in/desiree-mckenzie-17a369113/) for allowing me in at the last minute.
 
 They gave me a Sony a6400 camera to take home and practice with. Every week we would get a simple theme like portrait, practice motion blur, framing, and things like that. Then we would get together and show our pictures and discuss them, talking about why we chose to take that shot, what frame we used, our camera settings, and more.

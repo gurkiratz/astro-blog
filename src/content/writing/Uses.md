@@ -6,7 +6,7 @@ description: Things I use to make my life easy
 draft: false
 ---
 The things I use to make my life easy
-### Mac apps:
+## Mac apps:
 - [LinearMouse](https://linearmouse.app/en/) - open source app to make my mac trackpad and external mouse scroll smoothly
 - [Flux](https://justgetflux.com/) - to make my eyes have less strain when working through night
 - [AltTab](https://alt-tab.app/) - windows like tab previews when doing alt + tab. Free version is more than enough
@@ -38,7 +38,7 @@ The things I use to make my life easy
 - Tor browser
 - XnViewMP - image viewer
 
-### Hardware
+## Hardware
 - Viewsonic 32" display
 - macbook air m2 - 24gb ram
 - airpods pro 3 (gifted by my sister)
