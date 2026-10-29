@@ -35,11 +35,12 @@
 @layer base {
   html {
     color-scheme: dark;
-    background: var(--color-base);
+    background: var(--edge-top-background, var(--color-base));
     --marker: "##";
     scroll-behavior: smooth;
   }
   body {
+    background: var(--edge-bottom-background, var(--color-base));
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 17px;
@@ -420,4 +421,40 @@ html.theme-easing
   border: 0;
   border-top: 1px solid var(--color-rule);
   margin: 2em 0;
+}
+
+/* ── Edge strips ───────────────────────────────────────────────
+   Thin fixed bands at the top and bottom of the viewport, painted with
+   the same colors as <html> (top) and <body> (bottom) so mobile Safari's
+   status bar and toolbar tint match the page edge. Colors come from
+   src/lib/edge-colors.ts. They sit directly under <body>, outside any
+   transformed ancestor, so `fixed` stays relative to the viewport.      */
+.edge-top,
+.edge-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+.edge-top {
+  top: 0;
+  height: max(12px, env(safe-area-inset-top));
+}
+.edge-bottom {
+  bottom: 0;
+  height: max(12px, env(safe-area-inset-bottom));
+}
+.edge-top::after,
+.edge-bottom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: background-color 0.35s ease;
+}
+.edge-top::after {
+  background: var(--edge-top-background, var(--color-base));
+}
+.edge-bottom::after {
+  background: var(--edge-bottom-background, var(--color-base));
 }

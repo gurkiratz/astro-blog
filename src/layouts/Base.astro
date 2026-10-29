@@ -62,17 +62,27 @@ const person = {
 // Written out in full rather than interpolated: Tailwind finds classes by
 // scanning the source for literal strings.
 const measure = wide ? 'max-w-[64rem]' : 'max-w-[64rem]';
+// Padding never drops below the device's safe-area insets (viewport-fit=cover),
+// so text and controls stay clear of the notch, home indicator and rounded corners.
+const insetX =
+  'pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))]';
+const insetY =
+  'pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] md:pt-[max(3.5rem,env(safe-area-inset-top))] md:pb-[max(3.5rem,env(safe-area-inset-bottom))]';
 const shellClass = bleed
   ? 'relative z-10 flex min-h-dvh flex-col'
-  : `relative z-10 mx-auto flex min-h-dvh w-full ${measure} flex-col px-6 py-10 md:py-14`;
-const railClass = bleed ? `mx-auto w-full ${measure} px-6` : null;
+  : `relative z-10 mx-auto flex min-h-dvh w-full ${measure} flex-col ${insetX} ${insetY}`;
+const railClass = bleed ? `mx-auto w-full ${measure} ${insetX}` : null;
 ---
 
 <!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content={themes[0].palette?.base} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="alternate"
@@ -114,8 +124,21 @@ const railClass = bleed ? `mx-auto w-full ${measure} px-6` : null;
       data-theme-easing-exempt
     >
     </div>
+    <div class="edge-top" aria-hidden="true" transition:persist="edge-top"></div>
+    <div
+      class="edge-bottom"
+      aria-hidden="true"
+      transition:persist="edge-bottom"
+    >
+    </div>
     <div class={shellClass}>
-      <div class:list={[railClass, bleed && 'pt-10 md:pt-14']}>
+      <div
+        class:list={[
+          railClass,
+          bleed &&
+            'pt-[max(2.5rem,env(safe-area-inset-top))] md:pt-[max(3.5rem,env(safe-area-inset-top))]',
+        ]}
+      >
         <SiteHeader />
       </div>
 
@@ -125,7 +148,13 @@ const railClass = bleed ? `mx-auto w-full ${measure} px-6` : null;
 
       {
         footer ? (
-          <div class:list={[railClass, bleed && 'pb-10 md:pb-14']}>
+          <div
+            class:list={[
+              railClass,
+              bleed &&
+                'pb-[max(2.5rem,env(safe-area-inset-bottom))] md:pb-[max(3.5rem,env(safe-area-inset-bottom))]',
+            ]}
+          >
             <SiteFooter />
           </div>
         ) : null
@@ -133,8 +162,10 @@ const railClass = bleed ? `mx-auto w-full ${measure} px-6` : null;
     </div>
     <script>
       import { bind } from 'cuelume';
+      import { mountEdgeColors } from '../lib/edge-colors';
 
       bind();
+      mountEdgeColors();
     </script>
   </body>
 </html>
