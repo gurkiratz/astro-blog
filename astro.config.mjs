@@ -7,6 +7,7 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import rehypeFigcaption from "./src/lib/rehype-figcaption.mjs";
 import rehypeExternalLinks from "./src/lib/rehype-external-links.mjs";
+import rehypeMdLinks from "./src/lib/rehype-md-links.mjs";
 import remarkBreaks from "remark-breaks";
 
 // The live domain. Used for canonical URLs, the sitemap and the RSS feed.
@@ -19,7 +20,7 @@ export default defineConfig({
     // See src/lib/rehype-figcaption.mjs.
     // Single newlines render as <br>, matching how the Obsidian notes look.
     remarkPlugins: [remarkBreaks],
-    rehypePlugins: [rehypeFigcaption, rehypeExternalLinks],
+    rehypePlugins: [rehypeFigcaption, rehypeExternalLinks, rehypeMdLinks],
   },
 
   // Honour PORT so a second checkout (a git worktree, say) can run its own

@@ -6,7 +6,7 @@ description:
 draft: false
 ---
 ### Learning
-- [Deep learning](deep-learning) and neural networks
+- [deep-learning](deep-learning.md) and neural networks
 
 ### Music
 - Learning basic Jori bols from Mehar Singh (disciple of Sukhwinder Singh Pinky)
@@ -21,4 +21,6 @@ draft: false
 - Phase 4 - production
 
 Challenges:
-429s after continuous requests.
+- 429s after continuous requests. Solved it by crawling in batches of 45 req with a voluntary 180s wait time before another batch
+- Researching this whole project took greater time.
+	- 
