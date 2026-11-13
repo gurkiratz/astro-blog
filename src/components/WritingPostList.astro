@@ -12,6 +12,9 @@ const { posts, groupByYear = false, showTags = false } = Astro.props;
 const shortDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 
+const searchText = (post: CollectionEntry<'writing'>) =>
+  [post.data.title, ...post.data.tags].join(' ').toLowerCase();
+
 const byYear = new Map<number, CollectionEntry<'writing'>[]>();
 if (groupByYear) {
   for (const post of posts) {
@@ -33,24 +36,33 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
         </h2>
         <ul class="space-y-2">
           {byYear.get(year)!.map((post) => (
-            <li class="writing-post-item flex flex-wrap items-baseline gap-x-3">
+            <li
+              class="writing-post-item flex items-baseline gap-x-3"
+              data-search={searchText(post)}
+            >
               <span
                 class="w-12 shrink-0 text-faint tabular-nums"
                 style="font-size:0.85rem"
               >
                 {shortDate(post.data.date)}
               </span>
-              <a
-                href={`/writing/${post.id}/`}
-                class="writing-post-link no-underline hover:underline"
-              >
-                {post.data.title}
-              </a>
-              {showTags && post.data.tags[0] && (
-                <span class="text-faint" style="font-size:0.85rem">
-                  {post.data.tags[0]}
-                </span>
-              )}
+              <div class="min-w-0 flex-1">
+                <a
+                  href={`/writing/${post.id}/`}
+                  class="writing-post-link no-underline hover:underline"
+                >
+                  {post.data.title}
+                </a>
+                {showTags && post.data.tags[0] && (
+                  <span
+                    class="ml-2 text-faint"
+                    style="font-size:0.85rem"
+                    data-tag={post.data.tags[0]}
+                  >
+                    {post.data.tags[0]}
+                  </span>
+                )}
+              </div>
             </li>
           ))}
         </ul>
@@ -59,24 +71,33 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
   ) : (
     <ul class="space-y-2">
       {posts.map((post) => (
-        <li class="writing-post-item flex flex-wrap items-baseline gap-x-3">
+        <li
+          class="writing-post-item flex items-baseline gap-x-3"
+          data-search={searchText(post)}
+        >
           <span
             class="w-12 shrink-0 text-faint tabular-nums"
             style="font-size:0.85rem"
           >
             {shortDate(post.data.date)}
           </span>
-          <a
-            href={`/writing/${post.id}/`}
-            class="writing-post-link no-underline hover:underline"
-          >
-            {post.data.title}
-          </a>
-          {showTags && post.data.tags[0] && (
-            <span class="text-faint" style="font-size:0.85rem">
-              {post.data.tags[0]}
-            </span>
-          )}
+          <div class="min-w-0 flex-1">
+            <a
+              href={`/writing/${post.id}/`}
+              class="writing-post-link no-underline hover:underline"
+            >
+              {post.data.title}
+            </a>
+            {showTags && post.data.tags[0] && (
+              <span
+                class="ml-2 text-faint"
+                style="font-size:0.85rem"
+                data-tag={post.data.tags[0]}
+              >
+                {post.data.tags[0]}
+              </span>
+            )}
+          </div>
         </li>
       ))}
     </ul>

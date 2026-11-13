@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="800" height="560" fill="#ffffff"/>
+
+  <!-- main flow -->
+  <g font-size="16" font-weight="bold" text-anchor="middle" fill="#0f172a">
+    <rect x="40" y="30" width="260" height="54" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="170" y="62">Ontario Tenders Portal</text>
+
+    <rect x="40" y="130" width="260" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+    <text x="170" y="162">Crawl</text>
+
+    <rect x="40" y="250" width="260" height="54" rx="8" fill="#dcfce7" stroke="#22c55e"/>
+    <text x="170" y="282">Parse</text>
+
+    <rect x="40" y="380" width="260" height="54" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="170" y="412">Clean</text>
+
+    <rect x="40" y="480" width="260" height="54" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="170" y="512">Prod (pro_* tables)</text>
+  </g>
+
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <line x1="170" y1="84" x2="170" y2="128"/>
+    <line x1="170" y1="184" x2="170" y2="248"/>
+    <line x1="170" y1="304" x2="170" y2="378"/>
+    <line x1="170" y1="434" x2="170" y2="478"/>
+  </g>
+  <g font-size="13" fill="#475569">
+    <text x="180" y="221">raw pages</text>
+    <text x="180" y="111">45 requests, then 180 s wait</text>
+    <text x="180" y="346">CSVs</text>
+  </g>
+
+  <!-- crawl side -->
+  <rect x="400" y="130" width="360" height="54" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-dasharray="5 4"/>
+  <g font-size="13" fill="#0f172a">
+    <text x="414" y="153">S3: raw pages (ijf-crawl)</text>
+    <text x="414" y="172">S3: attachments (ijf-media)</text>
+  </g>
+  <line x1="300" y1="157" x2="398" y2="157" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- parse side -->
+  <rect x="400" y="222" width="360" height="40" rx="8" fill="#ffffff" stroke="#22c55e"/>
+  <text x="414" y="247" font-size="13" fill="#0f172a"><tspan font-weight="bold">Regex:</tspan> all fields</text>
+
+  <rect x="400" y="274" width="360" height="58" rx="8" fill="#ffffff" stroke="#22c55e"/>
+  <text x="414" y="297" font-size="13" fill="#0f172a"><tspan font-weight="bold">GPT</tspan> (PRO_ON_LLM=1): awards,</text>
+  <text x="414" y="317" font-size="13" fill="#0f172a">buyer address (before 2023), contact names</text>
+
+  <rect x="400" y="372" width="360" height="58" rx="8" fill="#ffffff" stroke="#22c55e" stroke-dasharray="5 4"/>
+  <text x="414" y="395" font-size="13" fill="#0f172a"><tspan font-weight="bold">GPT cache</tspan> (S3 ijf-parse)</text>
+  <text x="414" y="415" font-size="13" fill="#0f172a">same answer on reparse → same award rid</text>
+
+  <g stroke="#475569" stroke-width="2" fill="none">
+    <line x1="300" y1="277" x2="350" y2="277"/>
+    <line x1="350" y1="242" x2="350" y2="303"/>
+    <line x1="350" y1="242" x2="398" y2="242" marker-end="url(#arrow)"/>
+    <line x1="350" y1="303" x2="398" y2="303" marker-end="url(#arrow)"/>
+    <line x1="580" y1="335" x2="580" y2="370" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  </g>
+</svg>

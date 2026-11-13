@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" font-family="Helvetica, Arial, sans-serif">
+  <rect width="800" height="500" fill="#ffffff"/>
+
+  <text x="400" y="34" font-size="18" font-weight="bold" text-anchor="middle" fill="#0f172a">Ontario data, historical parse</text>
+  <text x="400" y="56" font-size="13" text-anchor="middle" fill="#475569">tenders published 2014-03 to 2026-10</text>
+
+  <!-- tenders -->
+  <rect x="250" y="76" width="300" height="96" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <g text-anchor="middle" fill="#0f172a">
+    <text x="400" y="102" font-size="16" font-weight="bold">Tenders</text>
+    <text x="400" y="130" font-size="22" font-weight="bold">10,726</text>
+    <text x="400" y="152" font-size="12" fill="#475569">5,400 awarded · 5,162 closed</text>
+    <text x="400" y="166" font-size="12" fill="#475569">93 cancelled · 71 open</text>
+  </g>
+
+  <!-- links from tenders -->
+  <g stroke="#475569" stroke-width="2" fill="none">
+    <line x1="400" y1="172" x2="400" y2="200"/>
+    <line x1="90" y1="200" x2="710" y2="200"/>
+    <line x1="90" y1="200" x2="90" y2="226"/>
+    <line x1="245" y1="200" x2="245" y2="226"/>
+    <line x1="400" y1="200" x2="400" y2="226"/>
+    <line x1="555" y1="200" x2="555" y2="226"/>
+    <line x1="710" y1="200" x2="710" y2="226"/>
+  </g>
+
+  <!-- children of tenders -->
+  <g text-anchor="middle" fill="#0f172a">
+    <rect x="20" y="226" width="140" height="84" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="90" y="250" font-size="14" font-weight="bold">Contacts</text>
+    <text x="90" y="276" font-size="18" font-weight="bold">21,424</text>
+    <text x="90" y="298" font-size="12" fill="#475569">buyer + contact person</text>
+
+    <rect x="175" y="226" width="140" height="84" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="245" y="250" font-size="14" font-weight="bold">Documents</text>
+    <text x="245" y="276" font-size="18" font-weight="bold">2,739</text>
+    <text x="245" y="298" font-size="12" fill="#475569">attachments</text>
+
+    <rect x="330" y="226" width="140" height="84" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="400" y="250" font-size="14" font-weight="bold">Awards</text>
+    <text x="400" y="276" font-size="18" font-weight="bold">7,062</text>
+    <text x="400" y="298" font-size="12" fill="#475569">one per supplier</text>
+
+    <rect x="485" y="226" width="140" height="84" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="555" y="250" font-size="14" font-weight="bold">Categories</text>
+    <text x="555" y="276" font-size="18" font-weight="bold">10,724</text>
+    <text x="555" y="298" font-size="12" fill="#475569">goods, services, constr.</text>
+
+    <rect x="640" y="226" width="140" height="84" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="710" y="250" font-size="14" font-weight="bold">Products</text>
+    <text x="710" y="276" font-size="18" font-weight="bold">61,262</text>
+    <text x="710" y="298" font-size="12" fill="#475569">UNSPSC codes</text>
+  </g>
+
+  <!-- links from awards -->
+  <g stroke="#475569" stroke-width="2" fill="none">
+    <line x1="400" y1="310" x2="400" y2="340"/>
+    <line x1="310" y1="340" x2="490" y2="340"/>
+    <line x1="310" y1="340" x2="310" y2="366"/>
+    <line x1="490" y1="340" x2="490" y2="366"/>
+  </g>
+
+  <!-- children of awards -->
+  <g text-anchor="middle" fill="#0f172a">
+    <rect x="230" y="366" width="160" height="84" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="310" y="390" font-size="14" font-weight="bold">Suppliers</text>
+    <text x="310" y="416" font-size="18" font-weight="bold">7,062</text>
+    <text x="310" y="438" font-size="12" fill="#475569">~4,500 unique names</text>
+
+    <rect x="410" y="366" width="160" height="84" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="490" y="390" font-size="14" font-weight="bold">Amounts</text>
+    <text x="490" y="416" font-size="18" font-weight="bold">7,062</text>
+    <text x="490" y="438" font-size="12" fill="#475569">CAD</text>
+  </g>
+
+  <text x="400" y="482" font-size="12" text-anchor="middle" fill="#64748b">counts are rows in the parsed CSVs</text>
+</svg>

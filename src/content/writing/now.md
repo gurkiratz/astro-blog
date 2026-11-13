@@ -14,14 +14,7 @@ draft: false
 ![](../assets/IMG_4669.gif)
 
 ### Work
-### IJF
-#### Building Ontario Procurement in our database pipeline from scratch.
-- Phase 1 - daily and historical crawler
-- Phase 2 - parsing and cleaning of data
-- Phase 3 - full historical run
-- Phase 4 - production
+IJF (internship) - Building [Ontario Procurement](ontario-procurement-project.md) in our database pipeline from scratch.
 
-Challenges:
-- 429s after continuous requests. Solved it by crawling in batches of 45 req with a voluntary 180s wait time before another batch
-- Researching this whole project took greater time.
-	- 
+### Client
+Global Sikhs new website

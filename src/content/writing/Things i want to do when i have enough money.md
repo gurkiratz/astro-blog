@@ -16,3 +16,8 @@ Buy a hydration water vest.
 Install a bicycle rack on the rear of the car. Use the rack to transport the bicycle to trail areas.
 
 Find a friend who bikes as well and ride together 🥹
+
+CERTIFICATIONS
+- aws solutions architect
+- Aws developer pro
+- ML certs

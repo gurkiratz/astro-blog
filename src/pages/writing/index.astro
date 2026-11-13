@@ -15,5 +15,70 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
   <p class="mt-2 text-muted" style="font-size:0.9rem">
     Things I've written down. <a href="/rss.xml">RSS →</a>
   </p>
-  <WritingPostList posts={posts} groupByYear showTags />
+  <input
+    type="search"
+    id="post-filter"
+    placeholder="Filter by title or tag"
+    aria-label="Filter posts by title or tag"
+    autocomplete="off"
+    class="mt-5 w-full border-0 border-b border-rule bg-transparent py-1 text-ink placeholder:text-faint focus:border-muted focus:outline-none"
+    style="font-size:0.9rem"
+  />
+  <div id="post-list">
+    <WritingPostList posts={posts} groupByYear showTags />
+  </div>
+  <p id="post-empty" class="mt-8 text-faint" style="font-size:0.9rem" hidden>
+    No posts match.
+  </p>
 </Base>
+
+<style is:global>
+  #post-list [data-tag] {
+    cursor: pointer;
+  }
+  #post-list [data-tag]:hover {
+    color: var(--color-muted);
+  }
+</style>
+
+<script>
+  const input = document.getElementById('post-filter') as HTMLInputElement;
+  const list = document.getElementById('post-list')!;
+  const empty = document.getElementById('post-empty')!;
+  const items = [...list.querySelectorAll<HTMLElement>('li[data-search]')];
+  const sections = [...list.querySelectorAll<HTMLElement>('section')];
+
+  function apply() {
+    const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const li of items) {
+      const hay = li.dataset.search ?? '';
+      const match = terms.every((t) => hay.includes(t));
+      li.hidden = !match;
+      if (match) shown++;
+    }
+    for (const sec of sections) {
+      sec.hidden = !sec.querySelector('li:not([hidden])');
+    }
+    empty.hidden = shown > 0;
+    const url = new URL(location.href);
+    if (input.value.trim()) url.searchParams.set('q', input.value.trim());
+    else url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+  }
+
+  input.addEventListener('input', apply);
+  list.addEventListener('click', (e) => {
+    const tag = (e.target as HTMLElement).closest<HTMLElement>('[data-tag]');
+    if (!tag) return;
+    input.value = tag.dataset.tag!;
+    apply();
+    input.focus();
+  });
+
+  const q = new URLSearchParams(location.search).get('q');
+  if (q) {
+    input.value = q;
+    apply();
+  }
+</script>
