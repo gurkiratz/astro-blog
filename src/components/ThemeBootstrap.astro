@@ -1,5 +1,6 @@
 ---
 import {
+  DEFAULT_THEME_INDEX,
   PALETTE_KEYS,
   THEME_STORAGE_KEY,
   themeOpacityFraction,
@@ -27,21 +28,22 @@ const themeCatalog = themes.map((theme) => ({
   `is:inline`, so Astro injects the catalog without turning it into a deferred
   module script.
 -->
-<script define:vars={{ themeCatalog, storageKey: THEME_STORAGE_KEY }}>
+<script define:vars={{ themeCatalog, storageKey: THEME_STORAGE_KEY, defaultIndex: DEFAULT_THEME_INDEX }}>
   (function () {
-    var activeIndex = 0;
+    var activeIndex = defaultIndex;
 
     function validIndex(value) {
       var index = Number(value);
       return Number.isInteger(index) && index >= 0 && index < themeCatalog.length
         ? index
-        : 0;
+        : defaultIndex;
     }
 
     try {
-      activeIndex = validIndex(localStorage.getItem(storageKey));
+      var stored = localStorage.getItem(storageKey);
+      activeIndex = stored === null ? defaultIndex : validIndex(stored);
     } catch (error) {
-      activeIndex = 0;
+      activeIndex = defaultIndex;
     }
 
     function applyTheme(index) {

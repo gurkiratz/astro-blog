@@ -82,7 +82,8 @@ export const PALETTE_KEYS: PaletteKey[] = [
 const DEFAULT_SCRIM_OPACITY = 85;
 const DEFAULT_POSITION = "center";
 
-// The first entry is the default for new visitors.
+// Order is persisted by index in localStorage, so append rather than
+// reorder. The default for new visitors is DEFAULT_THEME_NAME below.
 export const themes: ThemeEntry[] = [
   {
     name: "Dark",
@@ -151,6 +152,16 @@ export const themes: ThemeEntry[] = [
   },
 ];
 
+/** Theme shown to visitors who haven't picked one. */
+const DEFAULT_THEME_NAME = "After Hours";
+
+export const DEFAULT_THEME_INDEX = Math.max(
+  0,
+  themes.findIndex((theme) => theme.name === DEFAULT_THEME_NAME),
+);
+
+export const defaultTheme = themes[DEFAULT_THEME_INDEX];
+
 /** A theme's scrim opacity as a 0-1 fraction for direct use as a CSS `opacity` value. */
 export function themeOpacityFraction(theme: ThemeEntry): number {
   return (theme.opacity ?? DEFAULT_SCRIM_OPACITY) / 100;
@@ -173,12 +184,12 @@ export const THEME_STORAGE_KEY = "theme";
 export function getStoredThemeIndex(): number {
   try {
     const raw = localStorage.getItem(THEME_STORAGE_KEY);
-    const index = raw === null ? 0 : Number(raw);
+    const index = raw === null ? DEFAULT_THEME_INDEX : Number(raw);
     return Number.isInteger(index) && index >= 0 && index < themes.length
       ? index
-      : 0;
+      : DEFAULT_THEME_INDEX;
   } catch {
-    return 0;
+    return DEFAULT_THEME_INDEX;
   }
 }
 

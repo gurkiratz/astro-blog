@@ -52,7 +52,7 @@ export const projects: Project[] = [
     year: "2026",
     labels: ["Building", "Client"],
     description: "A redesign of the theglobalsikhs.org website",
-    links: [{ label: "live", href: "https://global-sikhs-delta.vercel.app" }],
+    links: [{ label: "live", href: "https://theglobalsikhs.org" }],
   },
   {
     name: "Kirtan Sewa Player",

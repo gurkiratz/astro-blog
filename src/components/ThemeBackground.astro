@@ -6,16 +6,16 @@
 // applies the theme's CSS tokens before paint; this module owns only media.
 //
 // The image is read from --theme-image/--theme-position on <html> (with the
-// first theme as fallback), so the FOUC script can set the right image
+// default theme as fallback), so the FOUC script can set the right image
 // before this element even exists in the DOM.
 //
 // Themes with a `video` additionally play it in the <video> below, layered
 // over the still image (which doubles as the stand-in while the video
 // buffers). The video only ever has a src while such a theme is active, so
 // other themes don't pay its download.
-import { themes, themePosition } from '../theme.config';
+import { defaultTheme, themePosition } from '../theme.config';
 
-const fallback = themes[0];
+const fallback = defaultTheme;
 const fallbackImage = fallback.image ? `url('${fallback.image}')` : 'none';
 ---
 

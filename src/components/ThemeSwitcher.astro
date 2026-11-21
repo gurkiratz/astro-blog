@@ -3,7 +3,7 @@
 // Selecting an option dispatches a "themechange" CustomEvent<number> that
 // ThemeBackground.astro listens for. Not persisted across navigations —
 // it's stateless UI, so a fresh render on every page is fine.
-import { Sparkles } from '@lucide/astro';
+import { Palette } from '@lucide/astro';
 import { themes, themeLabel } from '../theme.config';
 ---
 
@@ -17,7 +17,7 @@ import { themes, themeLabel } from '../theme.config';
     aria-expanded="false"
     data-cuelume-press data-cuelume-release
   >
-    <Sparkles class="theme-toggle-icon" size={18} aria-hidden="true" />
+    <Palette class="theme-toggle-icon" size={18} aria-hidden="true" />
   </button>
   <div
     class="theme-menu absolute right-0 z-20 mt-2 min-w-36 rounded-md border border-rule py-1"

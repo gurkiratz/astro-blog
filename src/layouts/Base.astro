@@ -2,7 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import { site } from '../site.config';
-import { themes, themeOpacityFraction } from '../theme.config';
+import { defaultTheme, themeOpacityFraction } from '../theme.config';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import ThemeBackground from '../components/ThemeBackground.astro';
@@ -82,7 +82,7 @@ const railClass = bleed ? `mx-auto w-full ${measure} ${insetX}` : null;
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="theme-color" content={themes[0].palette?.base} />
+    <meta name="theme-color" content={defaultTheme.palette?.base ?? '#16140f'} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="alternate"
@@ -119,7 +119,7 @@ const railClass = bleed ? `mx-auto w-full ${measure} ${insetX}` : null;
 
     <div
       class="pointer-events-none fixed inset-0 bg-base transition-[opacity,background-color] duration-500 ease-out"
-      style={`opacity: var(--scrim-opacity, ${themeOpacityFraction(themes[0])})`}
+      style={`opacity: var(--scrim-opacity, ${themeOpacityFraction(defaultTheme)})`}
       transition:persist="site-background-scrim"
       data-theme-easing-exempt
     >
